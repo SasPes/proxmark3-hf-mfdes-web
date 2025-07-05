@@ -171,3 +171,11 @@ def mfdes_deletefile(aid: str, fid: str, no_auth: bool = Query(False)):
     if no_auth:
         cmd += NO_AUTH
     return send_command(cmd)
+
+
+@app.get("/hf/mfdes/formatpicc", response_class=PlainTextResponse)
+def format_picc(no_auth: bool = Query(False)):
+    cmd = "hf mfdes formatpicc"
+    if no_auth:
+        cmd += NO_AUTH
+    return send_command(cmd)

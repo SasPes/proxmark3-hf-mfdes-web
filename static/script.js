@@ -656,3 +656,25 @@ async function runSetMasterKey() {
         output.innerHTML = `<pre>Error: ${escapeHTML(err.message)}</pre>`;
     }
 }
+
+function confirmFormatCard() {
+    if (confirm("Are you sure you want to format the card?\nThis action cannot be undone!")) {
+        runFormatCard();
+    }
+}
+
+async function runFormatCard() {
+    const output = document.getElementById('output');
+    output.innerHTML = `<pre>Running hf mfdes formatpicc ... please wait.</pre>`;
+    let endpoint = '/hf/mfdes/formatpicc';
+    if (getNoAuth()) {
+        endpoint += '?no_auth=1';
+    }
+    try {
+        const res = await fetch(endpoint);
+        const text = await res.text();
+        output.innerHTML = `<pre>${highlightOutput(text)}</pre>`;
+    } catch (err) {
+        output.innerHTML = `<pre>Error: ${escapeHTML(err.message)}</pre>`;
+    }
+}
