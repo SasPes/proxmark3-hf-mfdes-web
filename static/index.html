@@ -120,6 +120,16 @@
                 <button onclick="runChangeAppKey()">Set App Key</button>
             </div>
         </fieldset>
+        <fieldset class="mfdes-fieldset">
+            <legend>Delete App</legend>
+            <div class="mfdes-group">
+                <label for="deleteAppAid">App Name (AID)</label>
+                <select id="deleteAppAid" disabled>
+                    <option value="">-- Select App --</option>
+                </select>
+                <button onclick="runDeleteApp()">Delete App</button>
+            </div>
+        </fieldset>
     </div>
 
     <div id="subtab-file" class="sub-tab-content">
@@ -143,6 +153,20 @@
                 <label for="writeTextData">Plaintext to Write</label>
                 <input type="text" id="writeTextData" placeholder="Enter plain text" size="25"/>
                 <button onclick="runWriteFile()">Write to File</button>
+            </div>
+        </fieldset>
+        <fieldset class="mfdes-fieldset">
+            <legend>Delete File</legend>
+            <div class="mfdes-group">
+                <label for="deleteFileAid">App Name (AID)</label>
+                <select id="deleteFileAid" disabled>
+                    <option value="">-- Select App --</option>
+                </select>
+                <label for="deleteFileFid">File ID (FID)</label>
+                <select id="deleteFileFid" disabled>
+                    <option value="">-- Select File ID --</option>
+                </select>
+                <button onclick="runDeleteFile()">Delete File</button>
             </div>
         </fieldset>
     </div>

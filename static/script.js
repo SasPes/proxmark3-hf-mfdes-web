@@ -54,6 +54,12 @@ document.addEventListener("DOMContentLoaded", function () {
             document.getElementById(subTabId).classList.add('active');
         });
     });
+
+    // Add event listener for deleteFileAid to load FIDs
+    const deleteFileAid = document.getElementById('deleteFileAid');
+    if (deleteFileAid) {
+        deleteFileAid.addEventListener('change', loadDeleteFileIds);
+    }
 });
 
 async function startPm3() {
@@ -177,6 +183,9 @@ async function loadAppNames() {
     const setKeyAidSelect = document.getElementById('setAppKeyAid');
     const createFileAidSelect = document.getElementById('createFileAid');
     const writeFileAidSelect = document.getElementById('writeFileAid');
+    const deleteFileAidSelect = document.getElementById('deleteFileAid');
+    const deleteFileFidSelect = document.getElementById('deleteFileFid');
+    const deleteAppAidSelect = document.getElementById('deleteAppAid');
 
     loadAppsBtn.disabled = true;
     loadAppsBtn.textContent = 'Loading apps...';
@@ -211,6 +220,14 @@ async function loadAppNames() {
             createFileAidSelect.disabled = true;
             writeFileAidSelect.innerHTML = '<option value="">No apps found</option>';
             writeFileAidSelect.disabled = true;
+            if (deleteFileAidSelect) {
+                deleteFileAidSelect.innerHTML = '<option value="">No apps found</option>';
+                deleteFileAidSelect.disabled = true;
+            }
+            if (deleteAppAidSelect) {
+                deleteAppAidSelect.innerHTML = '<option value="">No apps found</option>';
+                deleteAppAidSelect.disabled = true;
+            }
         } else {
             select.innerHTML = `<option value="">-- Select App --</option>` +
                 appOptions.map(opt => `<option value="${opt.aid}">${opt.name}</option>`).join('');
@@ -224,6 +241,16 @@ async function loadAppNames() {
             writeFileAidSelect.innerHTML = `<option value="">-- Select App --</option>` +
                 appOptions.map(opt => `<option value="${opt.aid}">${opt.name}</option>`).join('');
             writeFileAidSelect.disabled = false;
+            if (deleteFileAidSelect) {
+                deleteFileAidSelect.innerHTML = `<option value="">-- Select App --</option>` +
+                    appOptions.map(opt => `<option value="${opt.aid}">${opt.name}</option>`).join('');
+                deleteFileAidSelect.disabled = false;
+            }
+            if (deleteAppAidSelect) {
+                deleteAppAidSelect.innerHTML = `<option value="">-- Select App --</option>` +
+                    appOptions.map(opt => `<option value="${opt.aid}">${opt.name}</option>`).join('');
+                deleteAppAidSelect.disabled = false;
+            }
         }
 
         // Clear file IDs dropdown
@@ -231,10 +258,24 @@ async function loadAppNames() {
         fidSelect.innerHTML = '<option value="">-- Select File ID --</option>';
         fidSelect.disabled = true;
 
+        // Reset deleteFileFid
+        if (deleteFileFidSelect) {
+            deleteFileFidSelect.innerHTML = '<option value="">-- Select File ID --</option>';
+            deleteFileFidSelect.disabled = true;
+        }
+
     } catch (err) {
         output.innerHTML = `<pre>Error loading apps: ${escapeHTML(err.message)}</pre>`;
         select.innerHTML = '<option value="">Error loading apps</option>';
         select.disabled = true;
+        if (deleteFileAidSelect) {
+            deleteFileAidSelect.innerHTML = '<option value="">Error loading apps</option>';
+            deleteFileAidSelect.disabled = true;
+        }
+        if (deleteAppAidSelect) {
+            deleteAppAidSelect.innerHTML = '<option value="">Error loading apps</option>';
+            deleteAppAidSelect.disabled = true;
+        }
     } finally {
         loadAppsBtn.disabled = false;
         loadAppsBtn.textContent = 'Get Apps';
@@ -273,6 +314,58 @@ async function loadFileIds() {
 
         // Parse file IDs — example line pattern expected:
         // [=] File ID: 01
+        const fileIds = [];
+        const regex = /\[=\] File ID: ([0-9a-fA-F]+)/gm;
+        let match;
+        while ((match = regex.exec(text)) !== null) {
+            fileIds.push(match[1]);
+        }
+
+        if (fileIds.length === 0) {
+            fidSelect.innerHTML = '<option value="">No file IDs found</option>';
+            fidSelect.disabled = true;
+        } else {
+            fidSelect.innerHTML = '<option value="">-- Select File ID --</option>' +
+                fileIds.map(fid => `<option value="${fid}">${fid}</option>`).join('');
+            fidSelect.disabled = false;
+        }
+    } catch (err) {
+        output.innerHTML = `<pre>Error loading file IDs: ${escapeHTML(err.message)}</pre>`;
+        fidSelect.innerHTML = '<option value="">Error loading file IDs</option>';
+        fidSelect.disabled = true;
+    }
+}
+
+// For Delete File section: load file IDs for selected app
+async function loadDeleteFileIds() {
+    const aid = document.getElementById('deleteFileAid').value;
+    const fidSelect = document.getElementById('deleteFileFid');
+    const output = document.getElementById('output');
+
+    if (!aid) {
+        fidSelect.innerHTML = '<option value="">-- Select File ID --</option>';
+        fidSelect.disabled = true;
+        return;
+    }
+
+    fidSelect.disabled = true;
+    fidSelect.innerHTML = '<option>Loading file IDs...</option>';
+
+    let endpoint = `/hf/mfdes/getfileids?aid=${encodeURIComponent(aid)}`;
+    if (getNoAuth()) {
+        endpoint += '&no_auth=1';
+    }
+
+    output.innerHTML = `<pre>Running ${endpoint} ... please wait.</pre>`;
+
+    try {
+        const res = await fetch(endpoint);
+        if (!res.ok) throw new Error(res.statusText);
+        const text = await res.text();
+
+        output.innerHTML = `<pre>${highlightOutput(text)}</pre>`;
+
+        // Parse file IDs
         const fileIds = [];
         const regex = /\[=\] File ID: ([0-9a-fA-F]+)/gm;
         let match;
@@ -482,6 +575,55 @@ async function runWriteFile() {
 
     output.innerHTML = `<pre>Running ${endpoint} ... please wait.</pre>`;
 
+    try {
+        const res = await fetch(endpoint);
+        const text = await res.text();
+        output.innerHTML = `<pre>${highlightOutput(text)}</pre>`;
+    } catch (err) {
+        output.innerHTML = `<pre>Error: ${escapeHTML(err.message)}</pre>`;
+    }
+}
+
+// Delete File logic
+async function runDeleteFile() {
+    const aid = document.getElementById('deleteFileAid').value;
+    const fid = document.getElementById('deleteFileFid').value;
+    const output = document.getElementById('output');
+
+    if (!aid || !fid) {
+        output.innerHTML = '<pre>Please select both App (AID) and File ID (FID) to delete.</pre>';
+        return;
+    }
+
+    let endpoint = `/hf/mfdes/deletefile?aid=${encodeURIComponent(aid)}&fid=${encodeURIComponent(fid)}`;
+    if (getNoAuth()) {
+        endpoint += '&no_auth=1';
+    }
+
+    output.innerHTML = `<pre>Running ${endpoint} ... please wait.</pre>`;
+
+    try {
+        const res = await fetch(endpoint);
+        const text = await res.text();
+        output.innerHTML = `<pre>${highlightOutput(text)}</pre>`;
+    } catch (err) {
+        output.innerHTML = `<pre>Error: ${escapeHTML(err.message)}</pre>`;
+    }
+}
+
+// Delete App logic
+async function runDeleteApp() {
+    const aid = document.getElementById('deleteAppAid').value;
+    const output = document.getElementById('output');
+    if (!aid) {
+        output.innerHTML = '<pre>Please select an App (AID) to delete.</pre>';
+        return;
+    }
+    let endpoint = `/hf/mfdes/deleteapp?aid=${encodeURIComponent(aid)}`;
+    if (getNoAuth()) {
+        endpoint += '&no_auth=1';
+    }
+    output.innerHTML = `<pre>Running ${endpoint} ... please wait.</pre>`;
     try {
         const res = await fetch(endpoint);
         const text = await res.text();

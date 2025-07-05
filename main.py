@@ -132,6 +132,14 @@ def change_app_key(aid: str, newkey: str, key_type: str = "AES"):
     return send_command(cmd)
 
 
+@app.get("/hf/mfdes/deleteapp", response_class=PlainTextResponse)
+def mfdes_deleteapp(aid: str, no_auth: bool = Query(False)):
+    cmd = f"hf mfdes deleteapp --aid {aid}"
+    if no_auth:
+        cmd += NO_AUTH
+    return send_command(cmd)
+
+
 @app.get("/hf/mfdes/createfile", response_class=PlainTextResponse)
 def mfdes_createfile(aid: str):
     cmd = (
@@ -144,4 +152,12 @@ def mfdes_createfile(aid: str):
 @app.get("/hf/mfdes/write", response_class=PlainTextResponse)
 def mfdes_write(aid: str, fid: str, data: str, offset: str = "000000"):
     cmd = f"hf mfdes write --aid {aid} --fid {fid} -d {data} -o {offset}"
+    return send_command(cmd)
+
+
+@app.get("/hf/mfdes/deletefile", response_class=PlainTextResponse)
+def mfdes_deletefile(aid: str, fid: str, no_auth: bool = Query(False)):
+    cmd = f"hf mfdes deletefile --aid {aid} --fid {fid}"
+    if no_auth:
+        cmd += NO_AUTH
     return send_command(cmd)
