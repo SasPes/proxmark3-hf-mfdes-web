@@ -40,7 +40,7 @@ document.querySelectorAll('.tab-button').forEach(button => {
     });
 });
 
-// Sub-tab switching for MFDes File Access
+// Sub-tab switching for MFDes
 document.addEventListener("DOMContentLoaded", function () {
     const subTabButtons = document.querySelectorAll('.sub-tab-button');
     const subTabContents = document.querySelectorAll('.sub-tab-content');
@@ -623,6 +623,30 @@ async function runDeleteApp() {
     if (getNoAuth()) {
         endpoint += '&no_auth=1';
     }
+    output.innerHTML = `<pre>Running ${endpoint} ... please wait.</pre>`;
+    try {
+        const res = await fetch(endpoint);
+        const text = await res.text();
+        output.innerHTML = `<pre>${highlightOutput(text)}</pre>`;
+    } catch (err) {
+        output.innerHTML = `<pre>Error: ${escapeHTML(err.message)}</pre>`;
+    }
+}
+
+async function runSetMasterKey() {
+    const newAlgo = document.getElementById('masterKeyNewAlgo').value;
+    const keyStr = document.getElementById('masterKeyInput').value;
+    const output = document.getElementById('output');
+    if (!keyStr) {
+        output.innerHTML = '<pre>Please enter a key.</pre>';
+        return;
+    }
+    // Convert key to hex
+    let hexKey = '';
+    for (let i = 0; i < keyStr.length; i++) {
+        hexKey += keyStr.charCodeAt(i).toString(16).padStart(2, '0');
+    }
+    let endpoint = `/hf/mfdes/changekey-master?newalgo=${newAlgo}&newkey=${hexKey}`;
     output.innerHTML = `<pre>Running ${endpoint} ... please wait.</pre>`;
     try {
         const res = await fetch(endpoint);

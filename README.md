@@ -48,7 +48,7 @@ Open your browser and go to [http://localhost:8000](http://localhost:8000).
 
 - Use the tabs to access different features.
 - Start the Proxmark3 shell from the "Proxmark3" tab.
-- Use the "MFDes File Access" tab for app/file operations.
+- Use the "MFDes" tab for app/file operations.
 - Output and command results are shown at the bottom.
 
 ## Notes

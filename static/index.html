@@ -16,7 +16,7 @@
     <button class="tab-button active" data-tab="tab0">Proxmark3</button>
     <button class="tab-button" data-tab="tab1">MFDes Profile</button>
     <button class="tab-button" data-tab="tab2">MFDes Commands</button>
-    <button class="tab-button" data-tab="tab3">MFDes File Access</button>
+    <button class="tab-button" data-tab="tab3">MFDes</button>
     <button class="tab-button" data-tab="tab4">Tools</button>
 </div>
 
@@ -67,7 +67,7 @@
 
 <div id="tab3" class="tab-content">
     <fieldset class="mfdes-fieldset">
-        <legend>MFDes File Access</legend>
+        <legend>MFDes Read</legend>
         <div class="mfdes-group">
             <button id="loadAppsBtn" onclick="loadAppNames()">Get Apps</button>
             <label for="appname">App Name (AID)</label>
@@ -82,10 +82,30 @@
         </div>
     </fieldset>
 
-    <!-- Sub-tabs for MFDes File Access -->
+    <!-- Sub-tabs for MFDes -->
     <div class="sub-tabs">
+        <button class="sub-tab-button" data-subtab="subtab-card">Card</button>
         <button class="sub-tab-button active" data-subtab="subtab-app">App</button>
         <button class="sub-tab-button" data-subtab="subtab-file">File</button>
+        <button class="sub-tab-button" data-subtab="subtab-delete">Delete</button>
+    </div>
+
+    <div id="subtab-card" class="sub-tab-content">
+        <fieldset class="mfdes-fieldset">
+            <legend>Set new card master key</legend>
+            <div class="mfdes-group">
+                <label for="masterKeyNewAlgo">New Algo</label>
+                <select id="masterKeyNewAlgo">
+                    <option value="des">DES</option>
+                    <option value="2tdea">2TDEA</option>
+                    <option value="3tdea">3TDEA</option>
+                    <option value="aes" selected>AES</option>
+                </select>
+                <label for="masterKeyInput">Key</label>
+                <input type="text" id="masterKeyInput" value="This is a test!!" size="32"/>
+                <button onclick="runSetMasterKey()">Set Master Key</button>
+            </div>
+        </fieldset>
     </div>
 
     <div id="subtab-app" class="sub-tab-content active">
@@ -120,16 +140,6 @@
                 <button onclick="runChangeAppKey()">Set App Key</button>
             </div>
         </fieldset>
-        <fieldset class="mfdes-fieldset">
-            <legend>Delete App</legend>
-            <div class="mfdes-group">
-                <label for="deleteAppAid">App Name (AID)</label>
-                <select id="deleteAppAid" disabled>
-                    <option value="">-- Select App --</option>
-                </select>
-                <button onclick="runDeleteApp()">Delete App</button>
-            </div>
-        </fieldset>
     </div>
 
     <div id="subtab-file" class="sub-tab-content">
@@ -155,6 +165,19 @@
                 <button onclick="runWriteFile()">Write to File</button>
             </div>
         </fieldset>
+    </div>
+
+    <div id="subtab-delete" class="sub-tab-content">
+        <fieldset class="mfdes-fieldset">
+            <legend>Delete App</legend>
+            <div class="mfdes-group">
+                <label for="deleteAppAid">App Name (AID)</label>
+                <select id="deleteAppAid" disabled>
+                    <option value="">-- Select App --</option>
+                </select>
+                <button onclick="runDeleteApp()">Delete App</button>
+            </div>
+        </fieldset>
         <fieldset class="mfdes-fieldset">
             <legend>Delete File</legend>
             <div class="mfdes-group">
@@ -170,6 +193,7 @@
             </div>
         </fieldset>
     </div>
+
 </div>
 
 <div id="tab4" class="tab-content">

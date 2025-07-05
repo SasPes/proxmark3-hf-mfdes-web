@@ -92,6 +92,16 @@ def hf_mfdes_default(
     return send_command(cmd)
 
 
+@app.get("/hf/mfdes/changekey-master", response_class=PlainTextResponse)
+def changekey_master(
+        newalgo: str = Query("aes"),
+        newkey: str = Query(...)
+):
+    t = "des"
+    cmd = f"hf mfdes changekey -t {t} --newalgo {newalgo} --newkey {newkey}"
+    return send_command(cmd)
+
+
 @app.get("/hf/mfdes/getappnames", response_class=PlainTextResponse)
 def hf_mfdes_getappnames(noauth: bool = Query(False)):
     cmd = "hf mfdes getappnames"
