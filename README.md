@@ -1,6 +1,6 @@
 # Proxmark3 MIFARE DESFire Web Interface
 
-<img src="ss/MIFARE-DESFire-EV3.png" width="300">
+<img src="ss/MIFARE-DESFire-EV3.png" width="250">
 
 A web-based interface for sending MIFARE DESFire commands to a Proxmark3 device.  
 Built with FastAPI (Python backend) and a modern HTML/JS frontend.
