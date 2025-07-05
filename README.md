@@ -5,6 +5,10 @@ Built with FastAPI (Python backend) and a simple HTML/JS frontend.
 
 ![ss](ss/ss.png)
 
+## Useful links
+[Proxmark3Commands](https://github.com/SasPes/Proxmark3Commands)   
+[MIFARE DESFire](https://github.com/SasPes/Proxmark3Commands/blob/main/MIFARE%20DESFire.md)
+
 ## Features
 
 - Start and control the Proxmark3 shell from your browser
