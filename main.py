@@ -39,7 +39,7 @@ def serve_home():
 
 # New endpoint to Start Proxmark3
 @app.get("/start-pm3", response_class=PlainTextResponse)
-def start_pm3(path: str = Query('../../proxmark3/pm3', description="Path to proxmark3 executable")):
+def start_pm3(path: str = Query('../proxmark3/pm3', description="Path to proxmark3 executable")):
     global pm3
     if pm3 is not None and pm3.isalive():
         return "Proxmark3 shell already running."

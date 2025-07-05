@@ -32,7 +32,7 @@ Built with FastAPI (Python backend) and a simple HTML/JS frontend.
     ```
     pip install fastapi pexpect uvicorn
     ```
-3. Make sure your Proxmark3 binary is built and available (default: `../../proxmark3/pm3`).
+3. Make sure your Proxmark3 binary is built and available (default: `../proxmark3/pm3`).
 
 ## Running
 
