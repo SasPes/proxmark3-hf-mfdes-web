@@ -1,0 +1,252 @@
+body {
+    font-family: monospace;
+    margin: 20px;
+}
+
+h1 {
+    color: #1b4f72;
+}
+
+.output {
+    border: 1px solid #1b4f72;
+    background: #f9f9f9;
+    padding: 10px;
+    height: 400px;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    border-radius: 6px;
+    font-family: monospace;
+    color: #333;
+    margin-top: 1rem;
+}
+
+button {
+    font-size: 13px;
+    padding: 6px 12px;
+    margin: 4px;
+    cursor: pointer;
+    background-color: #eee;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    white-space: nowrap;
+}
+
+button:hover {
+    background-color: #ddd;
+}
+
+.tabs {
+    display: flex;
+    border-bottom: 2px solid #5dade2;
+    margin-bottom: 1rem;
+    gap: 10px;
+}
+
+.tab-button {
+    background: none;
+    border: none;
+    border-bottom: 3px solid transparent;
+    padding: 10px 16px;
+    cursor: pointer;
+    font-weight: bold;
+    font-family: monospace;
+    color: #2e86c1;
+    transition: border-color 0.3s ease;
+}
+
+.tab-button:hover {
+    border-bottom-color: #85c1e9;
+}
+
+.tab-button.active {
+    border-bottom-color: #2e86c1;
+    color: #1b4f72;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+.sub-tabs {
+    display: flex;
+    border-bottom: 2px solid #5dade2;
+    margin-bottom: 1rem;
+    gap: 10px;
+}
+
+.sub-tab-button {
+    background: none;
+    border: none;
+    border-bottom: 3px solid transparent;
+    padding: 8px 14px;
+    cursor: pointer;
+    font-weight: bold;
+    font-family: monospace;
+    color: #2e86c1;
+    transition: border-color 0.3s ease;
+}
+
+.sub-tab-button:hover {
+    border-bottom-color: #85c1e9;
+}
+
+.sub-tab-button.active {
+    border-bottom-color: #2e86c1;
+    color: #1b4f72;
+}
+
+.sub-tab-content {
+    display: none;
+}
+
+.sub-tab-content.active {
+    display: block;
+}
+
+.mfdes-fieldset {
+    border: 1px solid #1b4f72;
+    padding: 0.8rem 1rem 1rem 1rem;
+    margin: 1rem 0;
+    border-radius: 6px;
+    font-family: monospace;
+    color: #333;
+}
+
+.mfdes-fieldset legend {
+    padding: 0 8px;
+    font-weight: bold;
+    font-size: 0.6rem;
+    color: #1b4f72;
+}
+
+
+.mfdes-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: nowrap;
+}
+
+.mfdes-group form {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+}
+
+.mfdes-group label {
+    white-space: nowrap;
+}
+
+.mfdes-group input[type="text"],
+.mfdes-group select {
+    font-family: monospace;
+    padding: 4px 6px;
+    font-size: 13px;
+    white-space: nowrap;
+}
+
+.mfdes-group form button[type="submit"] {
+    white-space: nowrap;
+}
+
+.no-auth-toggle-wrapper {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-family: monospace;
+    z-index: 9999;
+}
+
+.toggle-btn {
+    padding: 6px 12px;
+    background-color: #ddd;
+    color: #333;
+    border: 1px solid #aaa;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.toggle-btn.active {
+    background-color: #3498db;  /* bluish */
+    color: white;
+    border-color: #2e86c1;
+}
+
+.pm-success {
+    color: green;
+    /*font-weight: bold;*/
+}
+
+.pm-info {
+    color: blue;
+}
+
+.pm-warn {
+    color: orange;
+    font-weight: bold;
+}
+
+.pm-error {
+    color: red;
+    font-weight: bold;
+}
+
+.pm-uid {
+    color: #800080;
+    font-style: italic;
+}
+
+.pm-atqa {
+    color: #008080;
+}
+
+.pm-equal {
+    color: #296eb3;
+    font-weight: bold;
+}
+
+.pm-question {
+    color: #9932CC;
+    font-weight: bold;
+}
+
+.pm-success-detail {
+
+    color: #1b4f72;
+    font-weight: bold;
+}
+
+.pm-success-hash {
+    color: #050c93;
+    font-weight: bold;
+    font-style: normal;
+}
+
+.pm-success-auth {
+    color: #005c5c; /* Teal */
+    font-weight: bold;
+    font-style: normal;
+}
+
+.pm-error-double {
+    color: crimson;
+    font-weight: bold;
+    font-style: italic;
+}
+
+.pm-no {
+    color: crimson;
+    font-weight: bold;
+}
+
+.pm-yes {
+    color: green;
+    font-weight: bold;
+}

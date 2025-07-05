@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Proxmark3 Web Interface</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<h1>Proxmark3 MIFARE DESFire Command Interface</h1>
+
+<div class="no-auth-toggle-wrapper">
+    <button id="noAuthToggle" class="toggle-btn">No Auth: OFF</button>
+</div>
+
+<div class="tabs">
+    <button class="tab-button active" data-tab="tab0">Proxmark3</button>
+    <button class="tab-button" data-tab="tab1">MFDes Profile</button>
+    <button class="tab-button" data-tab="tab2">MFDes Commands</button>
+    <button class="tab-button" data-tab="tab3">MFDes File Access</button>
+    <button class="tab-button" data-tab="tab4">Tools</button>
+</div>
+
+<div id="tab0" class="tab-content active">
+    <fieldset class="mfdes-fieldset">
+        <legend>Proxmark3</legend>
+        <label for="pm3path">Proxmark3 Executable Path</label>
+        <input type="text" id="pm3path" value="../../proxmark3/pm3" size="40"/>
+        <button id="startPm3Btn" onclick="startPm3()">Start Proxmark3</button>
+    </fieldset>
+</div>
+
+<div id="tab1" class="tab-content">
+    <fieldset class="mfdes-fieldset">
+        <legend>MFDes Profile</legend>
+        <div class="mfdes-group" style="margin-bottom: 1rem;">
+            <button onclick="runCmd('hf/mfdes/get-default')">Get profile</button>
+            <button onclick="runSetDefaultProfile()">Set default profile</button>
+        </div>
+        <div class="mfdes-group">
+            <form id="mfdesForm" onsubmit="runDefault(event)">
+                <label for="type">Crypto Type</label>
+                <select id="type" name="type">
+                    <option value="DES">DES</option>
+                    <option value="2TDEA">2TDEA</option>
+                    <option value="3TDEA">3TDEA</option>
+                    <option value="AES" selected>AES</option>
+                </select>
+                <label for="key">Key</label>
+                <input type="text" id="key" name="key" value="This is a test!!" size="40"/>
+                <button type="submit">Set profile</button>
+            </form>
+        </div>
+    </fieldset>
+</div>
+
+<div id="tab2" class="tab-content">
+    <fieldset class="mfdes-fieldset">
+        <legend>MFDes Commands</legend>
+        <div class="mfdes-group">
+            <button onclick="runCmd('hf/search')">HF Search</button>
+            <button onclick="runFreemem()">Check Free Memory</button>
+            <button onclick="runCmd('hf/mfdes/info')">MFDes Info</button>
+            <button onclick="runMfdesLsApp()">MFDes LSApp</button>
+        </div>
+    </fieldset>
+</div>
+
+<div id="tab3" class="tab-content">
+    <fieldset class="mfdes-fieldset">
+        <legend>MFDes File Access</legend>
+        <div class="mfdes-group">
+            <button id="loadAppsBtn" onclick="loadAppNames()">Get Apps</button>
+            <label for="appname">App Name (AID)</label>
+            <select id="appname" name="appname" onchange="loadFileIds()" disabled>
+                <option value="">-- Select App --</option>
+            </select>
+            <label for="fileid">File ID (FID)</label>
+            <select id="fileid" name="fileid" disabled>
+                <option value="">-- Select File ID --</option>
+            </select>
+            <button id="readBtn" onclick="runRead()">Read file</button>
+        </div>
+    </fieldset>
+
+    <!-- Sub-tabs for MFDes File Access -->
+    <div class="sub-tabs">
+        <button class="sub-tab-button active" data-subtab="subtab-app">App</button>
+        <button class="sub-tab-button" data-subtab="subtab-file">File</button>
+    </div>
+
+    <div id="subtab-app" class="sub-tab-content active">
+        <fieldset class="mfdes-fieldset">
+            <legend>Create MFDes App</legend>
+            <div class="mfdes-group">
+                <label for="create-aid">App ID</label>
+                <input type="text" id="create-aid" placeholder="000001" size="8"/>
+                <label for="create-fid">FID</label>
+                <input type="text" id="create-fid" placeholder="0001" size="6"/>
+                <label for="create-dfname">App Name</label>
+                <input type="text" id="create-dfname" placeholder="github" size="10"/>
+                <label for="create-dstalgo">Key Algo</label>
+                <select id="create-dstalgo">
+                    <option value="des">DES</option>
+                    <option value="2tdea">2TDEA</option>
+                    <option value="3tdea">3TDEA</option>
+                    <option value="aes" selected>AES</option>
+                </select>
+                <button onclick="runCreateApp()">Create App</button>
+            </div>
+        </fieldset>
+        <fieldset class="mfdes-fieldset">
+            <legend>Set App Key</legend>
+            <div class="mfdes-group">
+                <label for="setAppKeyAid">App Name (AID)</label>
+                <select id="setAppKeyAid" disabled>
+                    <option value="">-- Select App --</option>
+                </select>
+                <label for="newAppKey">New Key</label>
+                <input type="text" id="newAppKey" size="35" value="This is a test!!"/>
+                <button onclick="runChangeAppKey()">Set App Key</button>
+            </div>
+        </fieldset>
+    </div>
+
+    <div id="subtab-file" class="sub-tab-content">
+        <fieldset class="mfdes-fieldset">
+            <legend>Create File</legend>
+            <div class="mfdes-group">
+                <label for="createFileAid">App Name (AID)</label>
+                <select id="createFileAid" disabled>
+                    <option value="">-- Select App --</option>
+                </select>
+                <button onclick="runCreateFile()">Create File</button>
+            </div>
+        </fieldset>
+        <fieldset class="mfdes-fieldset">
+            <legend>Write to File</legend>
+            <div class="mfdes-group">
+                <label for="writeFileAid">App Name (AID)</label>
+                <select id="writeFileAid" disabled>
+                    <option value="">-- Select App --</option>
+                </select>
+                <label for="writeTextData">Plaintext to Write</label>
+                <input type="text" id="writeTextData" placeholder="Enter plain text" size="25"/>
+                <button onclick="runWriteFile()">Write to File</button>
+            </div>
+        </fieldset>
+    </div>
+</div>
+
+<div id="tab4" class="tab-content">
+    <fieldset class="mfdes-fieldset">
+        <legend>String &lt;-&gt; Hex Converter</legend>
+        <label for="strInput">String</label>
+        <input type="text" id="strInput" size="40" placeholder="Enter text here"/>
+        <button onclick="strToHex()">to Hex</button>
+        <br/><br/>
+        <label for="hexInput">Hex</label>
+        <input type="text" id="hexInput" size="40" placeholder="Enter hex here"/>
+        <button onclick="hexToStr()">to String</button>
+    </fieldset>
+</div>
+
+<div id="output" class="output">Click a button to run a command and see output here...</div>
+
+<script src="/static/script.js"></script>
+</body>
+</html>
