@@ -678,3 +678,26 @@ async function runFormatCard() {
         output.innerHTML = `<pre>Error: ${escapeHTML(err.message)}</pre>`;
     }
 }
+
+function setupPasswordToggle(toggleBtnId, eyeIconId, inputId) {
+    const toggleBtn = document.getElementById(toggleBtnId);
+    const eyeIcon = document.getElementById(eyeIconId);
+    const input = document.getElementById(inputId);
+    if (toggleBtn && eyeIcon && input) {
+        eyeIcon.style.filter = '';
+        toggleBtn.addEventListener('click', function () {
+            if (input.type === 'password') {
+                input.type = 'text';
+                eyeIcon.style.filter = 'grayscale(100%) opacity(0.5)';
+            } else {
+                input.type = 'password';
+                eyeIcon.style.filter = '';
+            }
+        });
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    setupPasswordToggle('toggleKeyVisibility', 'eyeIcon', 'key');
+    setupPasswordToggle('toggleAppKeyVisibility', 'appEyeIcon', 'newAppKey');
+});

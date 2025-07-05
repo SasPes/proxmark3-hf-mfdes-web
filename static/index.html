@@ -47,7 +47,12 @@
                     <option value="AES" selected>AES</option>
                 </select>
                 <label for="key">Key</label>
-                <input type="text" id="key" name="key" value="This is a test!!" size="40"/>
+                <div class="input-with-icon">
+                    <input type="password" id="key" name="key" value="This is a test!!" size="30"/>
+                    <button type="button" id="toggleKeyVisibility" class="button">
+                        <img id="eyeIcon" src="/static/eye.png" alt="Show/Hide" style="width:16px;height:16px;">
+                    </button>
+                </div>
                 <button type="submit">Set profile</button>
             </form>
         </div>
@@ -137,7 +142,12 @@
                     <option value="">-- Select App --</option>
                 </select>
                 <label for="newAppKey">New Key</label>
-                <input type="text" id="newAppKey" size="35" value="This is a test!!"/>
+                <div class="input-with-icon">
+                    <input type="password" id="newAppKey" size="35" value="This is a test!!"/>
+                    <button type="button" id="toggleAppKeyVisibility" class="button">
+                        <img id="appEyeIcon" src="/static/eye.png" alt="Show/Hide" style="width:16px;height:16px;">
+                    </button>
+                </div>
                 <button onclick="runChangeAppKey()">Set App Key</button>
             </div>
         </fieldset>
