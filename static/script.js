@@ -703,6 +703,9 @@ document.addEventListener('DOMContentLoaded', function () {
     setupPasswordToggle('toggleMasterKeyVisibility', 'masterEyeIcon', 'masterKeyGlobal');
     setupPasswordToggle('toggleMasterKeyInputVisibility', 'masterKeyInputEyeIcon', 'masterKeyInput');
     setupPasswordToggle('toggleMasterKeyDefaultOldKeyVisibility', 'masterKeyDefaultOldKeyEyeIcon', 'masterKeyDefaultOldKey');
+    setupPasswordToggle('toggleRecoveryEncKeyVisibility', 'recoveryEncKeyEyeIcon', 'recoveryEncKey');
+    setupPasswordToggle('toggleRecoveryEncKeyConfirmVisibility', 'recoveryEncKeyConfirmEyeIcon', 'recoveryEncKeyConfirm');
+
 
     // Insert master key on any insertKeyBtn click
     document.querySelectorAll('.insertKeyBtn').forEach(btn => {
@@ -736,4 +739,138 @@ async function runSetDefaultMasterKey() {
     } catch (err) {
         output.innerHTML = `<pre>Error: ${escapeHTML(err.message)}</pre>`;
     }
+}
+
+async function saveRecoveryCodes() {
+    const appName = document.getElementById('recoveryAppName').value.trim();
+    const key = document.getElementById('recoveryEncKey').value;
+    const keyConfirm = document.getElementById('recoveryEncKeyConfirm').value;
+    const codes = document.getElementById('recoveryCodes').value.trim();
+    const output = document.getElementById('output');
+
+    if (!appName || !key || !keyConfirm || !codes) {
+        output.innerHTML = '<pre>Please fill in all fields.</pre>';
+        return;
+    }
+    if (key !== keyConfirm) {
+        output.innerHTML = '<pre>Encryption keys do not match.</pre>';
+        return;
+    }
+
+    const logs = [];
+
+    function updateOutput() {
+        output.innerHTML = logs.slice().reverse().join('');
+    }
+
+    function stepBox(title) {
+        return `<div class="step-box">${title}</div>`;
+    }
+
+    function stepBoxError(title) {
+        return `<div class="step-error">${title}</div>`;
+    }
+
+    function isError(text) {
+        return /\[\!\]/.test(text) || /error/i.test(text);
+    }
+
+    // Step 1: Start Proxmark3
+    let step = stepBox('Step 1: Starting Proxmark3...');
+    let res = await fetch(`/start-pm3`);
+    let text = await res.text();
+    logs.push(`${step}<pre>${highlightOutput(text)}</pre>`);
+    updateOutput();
+    if (isError(text)) {
+        logs.push(stepBoxError('🚩 Stopped due to error!') + '<br>');
+        updateOutput();
+        return;
+    }
+
+    // Step 2: Set Master Key
+    step = stepBox('Step 2: Setting Master Key...');
+    let hexKey = '';
+    for (let i = 0; i < key.length; i++) {
+        hexKey += key.charCodeAt(i).toString(16).padStart(2, '0');
+    }
+    res = await fetch(`/hf/mfdes/changekey-master?newalgo=aes&newkey=${encodeURIComponent(hexKey)}`);
+    text = await res.text();
+    logs.push(`${step}<pre>${highlightOutput(text)}</pre>`);
+    updateOutput();
+    if (isError(text)) {
+        logs.push(stepBoxError('🚩 Stopped due to error!') + '<br>');
+        updateOutput();
+        return;
+    }
+
+    // Step 3: Set profile
+    step = stepBox('Step 3: Setting profile...');
+    res = await fetch(`/hf/mfdes/set-default?type=AES&key=${encodeURIComponent(hexKey)}`);
+    text = await res.text();
+    logs.push(`${step}<pre>${highlightOutput(text)}</pre>`);
+    updateOutput();
+    if (isError(text)) {
+        logs.push(stepBoxError('🚩 Stopped due to error!') + '<br>');
+        updateOutput();
+        return;
+    }
+
+    // Step 4: Create App
+    step = stepBox('Step 4: Creating App...');
+    const aid = '000001';
+    const fid = '0001';
+    const dfname = appName;
+    const dstalgo = 'AES';
+    res = await fetch(`/hf/mfdes/createapp?aid=${aid}&fid=${fid}&dfname=${encodeURIComponent(dfname)}&dstalgo=${dstalgo}`);
+    text = await res.text();
+    logs.push(`${step}<pre>${highlightOutput(text)}</pre>`);
+    updateOutput();
+    if (isError(text)) {
+        logs.push(stepBoxError('🚩 Stopped due to error!') + '<br>');
+        updateOutput();
+        return;
+    }
+
+    // Step 5: Set App Key
+    step = stepBox('Step 5: Setting App Key...');
+    res = await fetch(`/hf/mfdes/changekey?aid=${aid}&newkey=${encodeURIComponent(hexKey)}`);
+    text = await res.text();
+    logs.push(`${step}<pre>${highlightOutput(text)}</pre>`);
+    updateOutput();
+    if (isError(text)) {
+        logs.push(stepBoxError('🚩 Stopped due to error!') + '<br>');
+        updateOutput();
+        return;
+    }
+
+    // Step 6: Create File
+    step = stepBox('Step 6: Creating File...');
+    res = await fetch(`/hf/mfdes/createfile?aid=${aid}`);
+    text = await res.text();
+    logs.push(`${step}<pre>${highlightOutput(text)}</pre>`);
+    updateOutput();
+    if (isError(text)) {
+        logs.push(stepBoxError('🚩 Stopped due to error!') + '<br>');
+        updateOutput();
+        return;
+    }
+
+    // Step 7: Write Recovery Codes
+    step = stepBox('Step 7: Writing Recovery Codes...');
+    let hexCodes = '';
+    for (let i = 0; i < codes.length; i++) {
+        hexCodes += codes.charCodeAt(i).toString(16).padStart(2, '0');
+    }
+    res = await fetch(`/hf/mfdes/write?aid=${aid}&fid=01&data=${hexCodes}&offset=000000`);
+    text = await res.text();
+    logs.push(`${step}<pre>${highlightOutput(text)}</pre>`);
+    updateOutput();
+    if (isError(text)) {
+        logs.push(stepBoxError('🚩 Stopped due to error!') + '<br>');
+        updateOutput();
+        return;
+    }
+
+    logs.push(stepBox('All steps completed.') + '<br>');
+    updateOutput();
 }

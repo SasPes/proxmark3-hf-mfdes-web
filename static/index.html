@@ -21,14 +21,15 @@
 </div>
 
 <div class="tabs">
-    <button class="tab-button active" data-tab="tab0">Proxmark3</button>
+    <button class="tab-button" data-tab="tab0">Proxmark3</button>
     <button class="tab-button" data-tab="tab1">MFDes Profile</button>
     <button class="tab-button" data-tab="tab2">MFDes Commands</button>
     <button class="tab-button" data-tab="tab3">MFDes</button>
     <button class="tab-button" data-tab="tab4">Tools</button>
+    <button class="tab-button active" data-tab="tab5">Recovery Codes</button>
 </div>
 
-<div id="tab0" class="tab-content active">
+<div id="tab0" class="tab-content">
     <fieldset class="mfdes-fieldset">
         <legend>Proxmark3</legend>
         <label for="pm3path">Proxmark3 Executable Path</label>
@@ -56,7 +57,7 @@
                 <label for="key">Key</label>
                 <div class="input-with-icon">
                     <input type="password" id="key" name="key" size="30"/>
-                    <button type="button" class="insertKeyBtn button">
+                    <button type="button" class="insertKeyBtn button icon-btn">
                         <img src="/static/img/key.png" alt="Insert" style="width:16px;height:16px;">
                     </button>
                     <button type="button" id="toggleKeyVisibility" class="button">
@@ -120,7 +121,7 @@
                 <label for="masterKeyInput">Key</label>
                 <div class="input-with-icon">
                     <input type="password" id="masterKeyInput" size="32"/>
-                    <button type="button" class="insertKeyBtn button">
+                    <button type="button" class="insertKeyBtn button icon-btn">
                         <img src="/static/img/key.png" alt="Insert" style="width:16px;height:16px;">
                     </button>
                     <button type="button" id="toggleMasterKeyInputVisibility" class="button">
@@ -145,7 +146,7 @@
                 <label for="masterKeyDefaultOldKey">Current Key</label>
                 <div class="input-with-icon">
                     <input type="password" id="masterKeyDefaultOldKey" size="32"/>
-                    <button type="button" class="insertKeyBtn button">
+                    <button type="button" class="insertKeyBtn button icon-btn">
                         <img src="/static/img/key.png" alt="Insert" style="width:16px;height:16px;">
                     </button>
                     <button type="button" id="toggleMasterKeyDefaultOldKeyVisibility" class="button">
@@ -188,7 +189,7 @@
                 <label for="newAppKey">New Key</label>
                 <div class="input-with-icon">
                     <input type="password" id="newAppKey" size="35"/>
-                    <button type="button" class="insertKeyBtn button">
+                    <button type="button" class="insertKeyBtn button icon-btn">
                         <img src="/static/img/key.png" alt="Insert" style="width:16px;height:16px;">
                     </button>
                     <button type="button" id="toggleAppKeyVisibility" class="button">
@@ -271,6 +272,65 @@
         <label for="hexInput">Hex</label>
         <input type="text" id="hexInput" size="40" placeholder="Enter hex here"/>
         <button onclick="hexToStr()">to String</button>
+    </fieldset>
+</div>
+
+<div id="tab5" class="tab-content active">
+    <fieldset class="mfdes-fieldset">
+        <legend>Store recovery codes on new card</legend>
+        <table style="width:100%; border-collapse:separate; border-spacing:12px 8px;">
+            <tr>
+                <td>
+                    <div class="input-with-icon" style="width:95%;">
+                        <label for="recoveryAppName">App Name</label><br>
+                        <input value="github" type="text" id="recoveryAppName" style="width:100%;"/>
+                    </div>
+                </td>
+                <td rowspan="4" style="vertical-align:top;">
+                    <label for="recoveryCodes">Recovery Codes</label><br>
+                    <textarea id="recoveryCodes" rows="10" cols="32" style="width:98%; resize:vertical;">c9sye-vpw90, so7aw-4f82w, z9a73-3deh2</textarea>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="recoveryEncKey">Encryption Key</label><br>
+                    <div class="input-with-icon" style="width:95%;">
+                        <input value="This is a test!!" type="password" id="recoveryEncKey" style="width:100%;"/>
+                        <button type="button" class="insertKeyBtn button icon-btn">
+                            <img src="/static/img/key.png" alt="Insert" style="width:16px;height:16px;">
+                        </button>
+                        <button type="button" id="toggleRecoveryEncKeyVisibility" class="button">
+                            <img id="recoveryEncKeyEyeIcon" src="/static/img/eye.png" alt="Show/Hide"
+                                 style="width:16px;height:16px;">
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label for="recoveryEncKeyConfirm">Confirm Key</label><br>
+                    <div class="input-with-icon" style="width:95%;">
+                        <input value="This is a test!!" type="password" id="recoveryEncKeyConfirm" style="width:100%;"/>
+                        <button type="button" class="insertKeyBtn button icon-btn">
+                            <img src="/static/img/key.png" alt="Insert" style="width:16px;height:16px;">
+                        </button>
+                        <button type="button" id="toggleRecoveryEncKeyConfirmVisibility" class="button">
+                            <img id="recoveryEncKeyConfirmEyeIcon" src="/static/img/eye.png" alt="Show/Hide"
+                                 style="width:16px;height:16px;">
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td style="text-align: center;">
+                    <div class="input-with-icon">
+                        <button class="recovery-full-btn" onclick="saveRecoveryCodes()">
+                            Encrypt and store to card
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        </table>
     </fieldset>
 </div>
 

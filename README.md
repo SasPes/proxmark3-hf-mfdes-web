@@ -1,5 +1,15 @@
 # Proxmark3 MIFARE DESFire Web Interface
 
+
+## Store recovery codes on new card
+1. Start Proxmark3
+2. Set Master Key
+3. Set profile
+4. Create App
+5. Set App Key
+6. Create File
+7. Write to File
+
 <img src="ss/MIFARE-DESFire-EV3.png" width="250">
 
 A web-based interface for sending MIFARE DESFire commands to a Proxmark3 device.  
