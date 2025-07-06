@@ -1,15 +1,17 @@
 # Proxmark3 MIFARE DESFire Web Interface
 
 
-## Store recovery codes on new card
+## Encrypt card button
 1. Start Proxmark3
 2. Set Master Key
 3. Set profile
-4. Create App
-5. Set App Key
-6. Create File
-7. Write to File
-8. Read file
+
+## Store recovery codes to card
+1. Check if app exists, create if not
+2. Set App Key
+3. Create File
+4. Write to File
+5. Read file
 
 ## Wipe & Restore Card
 1. Check Free Memory

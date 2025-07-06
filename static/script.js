@@ -741,15 +741,12 @@ async function runSetDefaultMasterKey() {
     }
 }
 
-async function saveRecoveryCodes() {
-    const appName = document.getElementById('recoveryAppName').value.trim();
+async function runSetMasterKey() {
     const key = document.getElementById('recoveryEncKey').value;
     const keyConfirm = document.getElementById('recoveryEncKeyConfirm').value;
-    const codes = document.getElementById('recoveryCodes').value.trim();
     const output = document.getElementById('output');
-
-    if (!appName || !key || !keyConfirm || !codes) {
-        output.innerHTML = '<pre>Please fill in all fields.</pre>';
+    if (!key || !keyConfirm) {
+        output.innerHTML = '<pre>Please enter and confirm the encryption key.</pre>';
         return;
     }
     if (key !== keyConfirm) {
@@ -815,48 +812,123 @@ async function saveRecoveryCodes() {
         return;
     }
 
-    // Step 4: Create App
-    step = stepBox('Step 4: Creating App...');
-    const aid = '000001';
-    const fid = '0001';
-    const dfname = appName;
-    const dstalgo = 'AES';
-    res = await fetch(`/hf/mfdes/createapp?aid=${aid}&fid=${fid}&dfname=${encodeURIComponent(dfname)}&dstalgo=${dstalgo}`);
-    text = await res.text();
-    logs.push(`${step}<pre>${highlightOutput(text)}</pre>`);
+    logs.push(stepBox('Encryption steps completed.') + '<br>');
     updateOutput();
-    if (isError(text)) {
+}
+
+async function saveRecoveryCodes() {
+    const appName = document.getElementById('recoveryAppName').value.trim();
+    const key = document.getElementById('recoveryEncKey').value;
+    const keyConfirm = document.getElementById('recoveryEncKeyConfirm').value;
+    const codes = document.getElementById('recoveryCodes').value.trim();
+    const output = document.getElementById('output');
+
+    if (!appName || !key || !keyConfirm || !codes) {
+        output.innerHTML = '<pre>Please fill in all fields.</pre>';
+        return;
+    }
+    if (key !== keyConfirm) {
+        output.innerHTML = '<pre>Encryption keys do not match.</pre>';
+        return;
+    }
+
+    const logs = [];
+
+    function updateOutput() {
+        output.innerHTML = logs.slice().reverse().join('');
+    }
+
+    function stepBox(title) {
+        return `<div class="step-box">${title}</div>`;
+    }
+
+    function stepBoxError(title) {
+        return `<div class="step-error">${title}</div>`;
+    }
+
+    function isError(text) {
+        return /\[\!\]/.test(text) || /error/i.test(text);
+    }
+
+    // Step 1: Check if app exists, create if not
+    let step = stepBox('Step 1: Checking/Creating App...');
+    let getAppsRes = await fetch(`/hf/mfdes/getappnames`);
+    let getAppsText = await getAppsRes.text();
+    logs.push(`${step}<pre>${highlightOutput(getAppsText)}</pre>`);
+    updateOutput();
+    if (isError(getAppsText)) {
         logs.push(stepBoxError('🚩 Stopped due to error!') + '<br>');
         updateOutput();
         return;
     }
 
-    // Step 5: Set App Key
-    step = stepBox('Step 5: Setting App Key...');
-    res = await fetch(`/hf/mfdes/changekey?aid=${aid}&newkey=${encodeURIComponent(hexKey)}`);
-    text = await res.text();
-    logs.push(`${step}<pre>${highlightOutput(text)}</pre>`);
-    updateOutput();
-    if (isError(text)) {
-        logs.push('<br>' + stepBoxError('🚩 Stopped due to error!'));
+    // Parse existing apps for AID and FID
+    const appRegex = /\[=\] AID: (\d+) ISO file id: (\d+) ISO DF name\[\d+\]:\s*(.+)$/gm;
+    let match, foundAid = null, foundFid = null, maxAid = 0, maxFid = 0;
+    while ((match = appRegex.exec(getAppsText)) !== null) {
+        const aidNum = parseInt(match[1], 10);
+        const fidNum = parseInt(match[2], 10);
+        if (aidNum > maxAid) maxAid = aidNum;
+        if (fidNum > maxFid) maxFid = fidNum;
+        if (match[3].trim() === appName) {
+            foundAid = match[1].padStart(6, '0');
+            foundFid = match[2].padStart(4, '0');
+        }
+    }
+    let aid = foundAid;
+    let fid = foundFid;
+    let appAlreadyExists = false;
+    if (!aid) {
+        aid = (maxAid + 1).toString().padStart(6, '0');
+        fid = (maxFid + 1).toString().padStart(4, '0');
+        let createRes = await fetch(`/hf/mfdes/createapp?aid=${aid}&fid=${fid}&dfname=${encodeURIComponent(appName)}&dstalgo=AES`);
+        let createText = await createRes.text();
+        logs.push(stepBox(`Creating App with AID ${aid} and FID ${fid}...`) + `<pre>${highlightOutput(createText)}</pre>`);
         updateOutput();
-        return;
+        if (isError(createText)) {
+            logs.push(stepBoxError('🚩 Stopped due to error!') + '<br>');
+            updateOutput();
+            return;
+        }
+    } else {
+        appAlreadyExists = true;
+        logs.push(stepBox(`App "${appName}" already exists with AID ${aid} and FID ${fid}. Skipping creation, set key, and file.`) + '<br>');
+        updateOutput();
     }
 
-    // Step 6: Create File
-    step = stepBox('Step 6: Creating File...');
-    res = await fetch(`/hf/mfdes/createfile?aid=${aid}`);
-    text = await res.text();
-    logs.push(`${step}<pre>${highlightOutput(text)}</pre>`);
-    updateOutput();
-    if (isError(text)) {
-        logs.push(stepBoxError('🚩 Stopped due to error!') + '<br>');
+// Only set app key and create file if app was just created
+    if (!appAlreadyExists) {
+        // Step 2: Set App Key
+        step = stepBox('Step 2: Setting App Key...');
+        let hexKey = '';
+        for (let i = 0; i < key.length; i++) {
+            hexKey += key.charCodeAt(i).toString(16).padStart(2, '0');
+        }
+        let res = await fetch(`/hf/mfdes/changekey?aid=${aid}&newkey=${encodeURIComponent(hexKey)}`);
+        let text = await res.text();
+        logs.push(`${step}<pre>${highlightOutput(text)}</pre>`);
         updateOutput();
-        return;
+        if (isError(text)) {
+            logs.push(stepBoxError('🚩 Stopped due to error!') + '<br>');
+            updateOutput();
+            return;
+        }
+
+        // Step 3: Create File
+        step = stepBox('Step 3: Creating File...');
+        res = await fetch(`/hf/mfdes/createfile?aid=${aid}`);
+        text = await res.text();
+        logs.push(`${step}<pre>${highlightOutput(text)}</pre>`);
+        updateOutput();
+        if (isError(text)) {
+            logs.push(stepBoxError('🚩 Stopped due to error!') + '<br>');
+            updateOutput();
+            return;
+        }
     }
 
-    // Step 7: Write Recovery Codes
-    step = stepBox('Step 7: Writing Recovery Codes...');
+    // Step 4: Write Recovery Codes
+    step = stepBox('Step 4: Writing Recovery Codes...');
     let hexCodes = '';
     for (let i = 0; i < codes.length; i++) {
         hexCodes += codes.charCodeAt(i).toString(16).padStart(2, '0');
@@ -871,8 +943,8 @@ async function saveRecoveryCodes() {
         return;
     }
 
-    // Step 8: Read file
-    step = stepBox('Step 8: Reading file...');
+    // Step 5: Read file
+    step = stepBox('Step 5: Reading file...');
     res = await fetch(`/hf/mfdes/read?aid=${aid}&fid=01`);
     text = await res.text();
     logs.push(`${step}<pre>${highlightOutput(text)}</pre>`);
@@ -894,12 +966,15 @@ async function cleanupCard() {
     function updateOutput() {
         output.innerHTML = logs.slice().reverse().join('');
     }
+
     function stepBox(title) {
         return `<div class="step-box">${title}</div>`;
     }
+
     function stepBoxError(title) {
         return `<div class="step-error">${title}</div>`;
     }
+
     function isError(text) {
         return /\[\!\]/.test(text) || /error/i.test(text);
     }

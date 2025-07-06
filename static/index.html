@@ -277,60 +277,58 @@
 
 <div id="tab5" class="tab-content active">
     <fieldset class="mfdes-fieldset">
-        <legend>Store recovery codes on new card</legend>
-        <table style="width:100%; border-collapse:separate; border-spacing:12px 8px;">
+        <legend>Encrypt card</legend>
+
+        <label for="recoveryEncKey">Encryption Key</label>
+        <div class="input-with-icon">
+            <input value="This is a test!!" type="password" id="recoveryEncKey" size="12"/>
+            <button type="button" class="insertKeyBtn button icon-btn">
+                <img src="/static/img/key.png" alt="Insert" style="width:16px;height:16px;">
+            </button>
+            <button type="button" id="toggleRecoveryEncKeyVisibility" class="button">
+                <img id="recoveryEncKeyEyeIcon" src="/static/img/eye.png" alt="Show/Hide"
+                     style="width:16px;height:16px;">
+            </button>
+        </div>
+
+        <label for="recoveryEncKeyConfirm">Confirm Key</label>
+        <div class="input-with-icon">
+            <input value="This is a test!!" type="password" id="recoveryEncKeyConfirm" size="12"/>
+            <button type="button" class="insertKeyBtn button icon-btn">
+                <img src="/static/img/key.png" alt="Insert" style="width:16px;height:16px;">
+            </button>
+            <button type="button" id="toggleRecoveryEncKeyConfirmVisibility" class="button">
+                <img id="recoveryEncKeyConfirmEyeIcon" src="/static/img/eye.png" alt="Show/Hide"
+                     style="width:16px;height:16px;">
+            </button>
+        </div>
+
+        <button onclick="runSetMasterKey()">Encrypt card</button>
+        <button class="recovery-full-btn cleanup" onclick="cleanupCard()">Wipe &amp; Restore Card</button>
+    </fieldset>
+    <fieldset class="mfdes-fieldset" style="position:relative;">
+        <legend>Store recovery codes</legend>
+        <button
+                style="position:absolute; top:3px; right:30px; z-index:2;"
+                onclick="runFreemem()"
+                title="Check Free Memory">
+            Check Free Memory
+        </button>
+        <table style="text-align: center; vertical-align: middle; width:100%; border-collapse:separate; border-spacing:12px 8px;">
             <tr>
-                <td>
-                    <div class="input-with-icon" style="width:95%;">
-                        <label for="recoveryAppName">App Name</label><br>
-                        <input value="github" type="text" id="recoveryAppName" style="width:100%;"/>
-                    </div>
+                <td style="width:33%;">
+                    <label for="recoveryAppName">App Name</label>
+                    <input type="text" id="recoveryAppName" value="github"/>
                 </td>
-                <td rowspan="4" style="vertical-align:top;">
-                    <label for="recoveryCodes">Recovery Codes</label><br>
-                    <textarea id="recoveryCodes" rows="10" cols="32" style="width:98%; resize:vertical;">c9sye-vpw90, so7aw-4f82w, z9a73-3deh2</textarea>
+                <td rowspan="2" style="width:67%; vertical-align:top;">
+                    <label for="recoveryCodes" style="text-align:left; display:block;">Recovery Codes</label><br>
+                    <textarea id="recoveryCodes" rows="2" cols="32" style="width:98%; resize:vertical;">c9sye-vpw90, so7aw-4f82w, z9a73-3deh2</textarea>
                 </td>
             </tr>
             <tr>
                 <td>
-                    <label for="recoveryEncKey">Encryption Key</label><br>
-                    <div class="input-with-icon" style="width:95%;">
-                        <input value="This is a test!!" type="password" id="recoveryEncKey" style="width:100%;"/>
-                        <button type="button" class="insertKeyBtn button icon-btn">
-                            <img src="/static/img/key.png" alt="Insert" style="width:16px;height:16px;">
-                        </button>
-                        <button type="button" id="toggleRecoveryEncKeyVisibility" class="button">
-                            <img id="recoveryEncKeyEyeIcon" src="/static/img/eye.png" alt="Show/Hide"
-                                 style="width:16px;height:16px;">
-                        </button>
-                    </div>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <label for="recoveryEncKeyConfirm">Confirm Key</label><br>
-                    <div class="input-with-icon" style="width:95%;">
-                        <input value="This is a test!!" type="password" id="recoveryEncKeyConfirm" style="width:100%;"/>
-                        <button type="button" class="insertKeyBtn button icon-btn">
-                            <img src="/static/img/key.png" alt="Insert" style="width:16px;height:16px;">
-                        </button>
-                        <button type="button" id="toggleRecoveryEncKeyConfirmVisibility" class="button">
-                            <img id="recoveryEncKeyConfirmEyeIcon" src="/static/img/eye.png" alt="Show/Hide"
-                                 style="width:16px;height:16px;">
-                        </button>
-                    </div>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <div class="input-with-icon">
-                        <button class="recovery-full-btn" onclick="saveRecoveryCodes()">
-                            Encrypt and store to card
-                        </button>
-                        <button class="recovery-full-btn cleanup" onclick="cleanupCard()">
-                            Wipe & Restore Card
-                        </button>
-                    </div>
+                    <button class="recovery-full-btn" onclick="saveRecoveryCodes()">Store recovery codes to card
+                    </button>
                 </td>
             </tr>
         </table>
