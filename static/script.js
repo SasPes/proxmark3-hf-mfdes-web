@@ -886,3 +886,91 @@ async function saveRecoveryCodes() {
     logs.push(stepBox('All steps completed.') + '<br>');
     updateOutput();
 }
+
+async function cleanupCard() {
+    const output = document.getElementById('output');
+    const logs = [];
+
+    function updateOutput() {
+        output.innerHTML = logs.slice().reverse().join('');
+    }
+    function stepBox(title) {
+        return `<div class="step-box">${title}</div>`;
+    }
+    function stepBoxError(title) {
+        return `<div class="step-error">${title}</div>`;
+    }
+    function isError(text) {
+        return /\[\!\]/.test(text) || /error/i.test(text);
+    }
+
+    // Step 1: Check Free Memory
+    let step = stepBox('Step 1: Check Free Memory');
+    let res = await fetch('/hf/mfdes/freemem');
+    let text = await res.text();
+    logs.push(`${step}<pre>${highlightOutput(text)}</pre>`);
+    updateOutput();
+    if (isError(text)) {
+        logs.push(stepBoxError('🚩 Stopped due to error!') + '<br>');
+        updateOutput();
+        return;
+    }
+
+    // Step 2: Format Card
+    step = stepBox('Step 2: Format Card');
+    res = await fetch('/hf/mfdes/formatpicc');
+    text = await res.text();
+    logs.push(`${step}<pre>${highlightOutput(text)}</pre>`);
+    updateOutput();
+    if (isError(text)) {
+        logs.push(stepBoxError('🚩 Stopped due to error!') + '<br>');
+        updateOutput();
+        return;
+    }
+
+    // Step 3: Check Free Memory
+    step = stepBox('Step 3: Check Free Memory');
+    res = await fetch('/hf/mfdes/freemem');
+    text = await res.text();
+    logs.push(`${step}<pre>${highlightOutput(text)}</pre>`);
+    updateOutput();
+    if (isError(text)) {
+        logs.push(stepBoxError('🚩 Stopped due to error!') + '<br>');
+        updateOutput();
+        return;
+    }
+
+    // Step 4: Set default (DES/0...0)
+    step = stepBox('Step 4: Set default (DES/0...0)');
+    res = await fetch('/hf/mfdes/changekey-master-default?oldalgo=aes&oldkey=54686973206973206120746573742121'); // "This is a test!!" in hex
+    text = await res.text();
+    logs.push(`${step}<pre>${highlightOutput(text)}</pre>`);
+    updateOutput();
+    if (isError(text)) {
+        logs.push(stepBoxError('🚩 Stopped due to error!') + '<br>');
+        updateOutput();
+        return;
+    }
+
+    // Step 5: Set default profile
+    step = stepBox('Step 5: Set default profile');
+    res = await fetch('/hf/mfdes/set-default?type=DES&key=0000000000000000');
+    text = await res.text();
+    logs.push(`${step}<pre>${highlightOutput(text)}</pre>`);
+    updateOutput();
+    if (isError(text)) {
+        logs.push(stepBoxError('🚩 Stopped due to error!') + '<br>');
+        updateOutput();
+        return;
+    }
+
+    // Step 6: Get profile
+    step = stepBox('Step 6: Get profile');
+    res = await fetch('/hf/mfdes/get-default');
+    text = await res.text();
+    logs.push(`${step}<pre>${highlightOutput(text)}</pre>`);
+    updateOutput();
+
+    logs.push(stepBox('Wipe & Restore Card completed.') + '<br>');
+    updateOutput();
+}

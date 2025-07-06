@@ -11,6 +11,14 @@
 7. Write to File
 8. Read file
 
+## Wipe & Restore Card
+1. Check Free Memory
+2. Format Card
+3. Check Free Memory
+4. Set default (DES/0...0)
+5. Set default profile
+6. Get profile
+
 <img src="ss/MIFARE-DESFire-EV3.png" width="250">
 
 A web-based interface for sending MIFARE DESFire commands to a Proxmark3 device.  
