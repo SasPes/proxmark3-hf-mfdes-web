@@ -8,21 +8,31 @@ document.addEventListener("DOMContentLoaded", function () {
             button.classList.add('active');
             const tabContent = document.getElementById(tabId);
             tabContent.classList.add('active');
-            // Load MFDes tab content if tab3 is activated
             if (tabId === 'tab3') {
                 loadMfdesTabContent();
+            } else if (tabId === 'tab5') {
+                loadRecoveryTabContent();
             }
         });
     });
 
-    // On initial load, if tab3 is active, load its content
+    // On initial load, if tab3 or tab5 is active, load their content
     const tab3 = document.getElementById('tab3');
     if (tab3 && tab3.classList.contains('active')) {
         loadMfdesTabContent();
     }
+    const tab5 = document.getElementById('tab5');
+    if (tab5 && tab5.classList.contains('active')) {
+        loadRecoveryTabContent();
+    }
+
+    // Simulate click on Recovery Codes tab on start
+    const recoveryTabBtn = document.querySelector('.tab-button[data-tab="tab5"]');
+    if (recoveryTabBtn) {
+        recoveryTabBtn.click();
+    }
 });
 
-// --- MFDes tab content loading and sub-tabs ---
 function loadMfdesTabContent() {
     const tab3 = document.getElementById('tab3');
     if (tab3 && tab3.innerHTML.trim() === '') {
@@ -31,7 +41,19 @@ function loadMfdesTabContent() {
             .then(res => res.text())
             .then(html => {
                 tab3.innerHTML = html;
-                setupMfdesSubTabs(); // Re-attach sub-tab listeners
+                setupMfdesSubTabs();
+            });
+    }
+}
+
+function loadRecoveryTabContent() {
+    const tab5 = document.getElementById('tab5');
+    if (tab5 && tab5.innerHTML.trim() === '') {
+        fetch('/static/tabs/recovery-codes.html')
+            .then(res => res.text())
+            .then(html => {
+                tab5.innerHTML = html;
+                // Optionally, re-initialize any JS needed for this tab
             });
     }
 }
