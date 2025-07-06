@@ -282,7 +282,8 @@ button:hover {
 #toggleKeyVisibility,
 #toggleAppKeyVisibility,
 #toggleMasterKeyVisibility,
-#toggleMasterKeyInputVisibility {
+#toggleMasterKeyInputVisibility,
+#toggleMasterKeyDefaultOldKeyVisibility {
     position: absolute;
     right: 4px;
     top: 50%;
@@ -302,7 +303,8 @@ button:hover {
 #toggleKeyVisibility img,
 #toggleAppKeyVisibility img,
 #toggleMasterKeyVisibility img,
-#toggleMasterKeyInputVisibility img {
+#toggleMasterKeyInputVisibility img,
+#toggleMasterKeyDefaultOldKeyVisibility img {
     width: 18px;
     height: 18px;
     display: block;

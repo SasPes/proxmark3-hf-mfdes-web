@@ -102,6 +102,15 @@ def changekey_master(
     return send_command(cmd)
 
 
+@app.get("/hf/mfdes/changekey-master-default", response_class=PlainTextResponse)
+def changekey_master_default(
+        oldalgo: str = Query("aes"),
+        oldkey: str = Query(...)
+):
+    cmd = f"hf mfdes changekey -t {oldalgo} -k {oldkey} --newalgo des --newkey 0000000000000000"
+    return send_command(cmd)
+
+
 @app.get("/hf/mfdes/getappnames", response_class=PlainTextResponse)
 def hf_mfdes_getappnames(noauth: bool = Query(False)):
     cmd = "hf mfdes getappnames"

@@ -131,6 +131,31 @@
                 <button onclick="runSetMasterKey()">Set Master Key</button>
             </div>
         </fieldset>
+        <fieldset class="mfdes-fieldset">
+            <legend>Set card default master key</legend>
+            <div class="mfdes-group">
+                <label for="masterKeyCurrentAlgo">Current Algo</label>
+                <select id="masterKeyCurrentAlgo">
+                    <option value="des">DES</option>
+                    <option value="2tdea">2TDEA</option>
+                    <option value="3tdea">3TDEA</option>
+                    <option value="aes" selected>AES</option>
+                </select>
+
+                <label for="masterKeyDefaultOldKey">Current Key</label>
+                <div class="input-with-icon">
+                    <input type="password" id="masterKeyDefaultOldKey" size="32"/>
+                    <button type="button" class="insertKeyBtn button">
+                        <img src="/static/img/key.png" alt="Insert" style="width:16px;height:16px;">
+                    </button>
+                    <button type="button" id="toggleMasterKeyDefaultOldKeyVisibility" class="button">
+                        <img id="masterKeyDefaultOldKeyEyeIcon" src="/static/img/eye.png" alt="Show/Hide"
+                             style="width:16px;height:16px;">
+                    </button>
+                </div>
+                <button onclick="runSetDefaultMasterKey()">Set default (DES/0...0)</button>
+            </div>
+        </fieldset>
     </div>
 
     <div id="subtab-app" class="sub-tab-content active">

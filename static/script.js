@@ -702,6 +702,7 @@ document.addEventListener('DOMContentLoaded', function () {
     setupPasswordToggle('toggleAppKeyVisibility', 'appEyeIcon', 'newAppKey');
     setupPasswordToggle('toggleMasterKeyVisibility', 'masterEyeIcon', 'masterKeyGlobal');
     setupPasswordToggle('toggleMasterKeyInputVisibility', 'masterKeyInputEyeIcon', 'masterKeyInput');
+    setupPasswordToggle('toggleMasterKeyDefaultOldKeyVisibility', 'masterKeyDefaultOldKeyEyeIcon', 'masterKeyDefaultOldKey');
 
     // Insert master key on any insertKeyBtn click
     document.querySelectorAll('.insertKeyBtn').forEach(btn => {
@@ -715,3 +716,24 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 });
+
+async function runSetDefaultMasterKey() {
+    const output = document.getElementById('output');
+    output.innerHTML = `<pre>Setting default master key (to DES/0...0)...</pre>`;
+    // Get oldalgo and oldkey from UI
+    const masterKey = document.getElementById('masterKeyDefaultOldKey').value;
+    const oldalgo = document.getElementById('masterKeyCurrentAlgo')?.value || 'aes';
+    let hexKey = '';
+    for (let i = 0; i < masterKey.length; i++) {
+        hexKey += masterKey.charCodeAt(i).toString(16).padStart(2, '0');
+    }
+    const endpoint = `/hf/mfdes/changekey-master-default?oldalgo=${encodeURIComponent(oldalgo)}&oldkey=${encodeURIComponent(hexKey)}`;
+    output.innerHTML = `<pre>Running ${endpoint} ... please wait.</pre>`;
+    try {
+        const res = await fetch(endpoint);
+        const text = await res.text();
+        output.innerHTML = `<pre>${highlightOutput(text)}</pre>`;
+    } catch (err) {
+        output.innerHTML = `<pre>Error: ${escapeHTML(err.message)}</pre>`;
+    }
+}
