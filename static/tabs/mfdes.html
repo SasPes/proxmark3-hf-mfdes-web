@@ -1,0 +1,176 @@
+<fieldset class="mfdes-fieldset">
+    <legend>MFDes Read</legend>
+    <div class="mfdes-group">
+        <button id="loadAppsBtn" onclick="loadAppNames()">Get Apps</button>
+        <label for="appname">App Name (AID)</label>
+        <select id="appname" name="appname" onchange="loadFileIds()" disabled>
+            <option value="">-- Select App --</option>
+        </select>
+        <label for="fileid">File ID (FID)</label>
+        <select id="fileid" name="fileid" disabled>
+            <option value="">-- Select File ID --</option>
+        </select>
+        <button id="readBtn" onclick="runRead()">Read file</button>
+    </div>
+</fieldset>
+
+<!-- Sub-tabs for MFDes -->
+<div class="sub-tabs">
+    <button class="sub-tab-button" data-subtab="subtab-card">Card</button>
+    <button class="sub-tab-button active" data-subtab="subtab-app">App</button>
+    <button class="sub-tab-button" data-subtab="subtab-file">File</button>
+    <button class="sub-tab-button" data-subtab="subtab-delete">Delete</button>
+</div>
+
+<div id="subtab-card" class="sub-tab-content">
+    <fieldset class="mfdes-fieldset">
+        <legend>Set new card master key</legend>
+        <div class="mfdes-group">
+            <label for="masterKeyNewAlgo">New Algo</label>
+            <select id="masterKeyNewAlgo">
+                <option value="des">DES</option>
+                <option value="2tdea">2TDEA</option>
+                <option value="3tdea">3TDEA</option>
+                <option value="aes" selected>AES</option>
+            </select>
+            <label for="masterKeyInput">Key</label>
+            <div class="input-with-icon">
+                <input type="password" id="masterKeyInput" size="32"/>
+                <button type="button" class="insertKeyBtn button icon-btn">
+                    <img src="/static/img/key.png" alt="Insert" style="width:16px;height:16px;">
+                </button>
+                <button type="button" id="toggleMasterKeyInputVisibility" class="button">
+                    <img id="masterKeyInputEyeIcon" src="/static/img/eye.png" alt="Show/Hide"
+                         style="width:16px;height:16px;">
+                </button>
+            </div>
+            <button onclick="runSetMasterKey()">Set Master Key</button>
+        </div>
+    </fieldset>
+    <fieldset class="mfdes-fieldset">
+        <legend>Set card default master key</legend>
+        <div class="mfdes-group">
+            <label for="masterKeyCurrentAlgo">Current Algo</label>
+            <select id="masterKeyCurrentAlgo">
+                <option value="des">DES</option>
+                <option value="2tdea">2TDEA</option>
+                <option value="3tdea">3TDEA</option>
+                <option value="aes" selected>AES</option>
+            </select>
+
+            <label for="masterKeyDefaultOldKey">Current Key</label>
+            <div class="input-with-icon">
+                <input type="password" id="masterKeyDefaultOldKey" size="32"/>
+                <button type="button" class="insertKeyBtn button icon-btn">
+                    <img src="/static/img/key.png" alt="Insert" style="width:16px;height:16px;">
+                </button>
+                <button type="button" id="toggleMasterKeyDefaultOldKeyVisibility" class="button">
+                    <img id="masterKeyDefaultOldKeyEyeIcon" src="/static/img/eye.png" alt="Show/Hide"
+                         style="width:16px;height:16px;">
+                </button>
+            </div>
+            <button onclick="runSetDefaultMasterKey()">Set default (DES/0...0)</button>
+        </div>
+    </fieldset>
+</div>
+
+<div id="subtab-app" class="sub-tab-content active">
+    <fieldset class="mfdes-fieldset">
+        <legend>Create MFDes App</legend>
+        <div class="mfdes-group">
+            <label for="create-aid">App ID</label>
+            <input type="text" id="create-aid" placeholder="000001" size="8"/>
+            <label for="create-fid">FID</label>
+            <input type="text" id="create-fid" placeholder="0001" size="6"/>
+            <label for="create-dfname">App Name</label>
+            <input type="text" id="create-dfname" placeholder="github" size="10"/>
+            <label for="create-dstalgo">Key Algo</label>
+            <select id="create-dstalgo">
+                <option value="des">DES</option>
+                <option value="2tdea">2TDEA</option>
+                <option value="3tdea">3TDEA</option>
+                <option value="aes" selected>AES</option>
+            </select>
+            <button onclick="runCreateApp()">Create App</button>
+        </div>
+    </fieldset>
+    <fieldset class="mfdes-fieldset">
+        <legend>Set App Key</legend>
+        <div class="mfdes-group">
+            <label for="setAppKeyAid">App Name (AID)</label>
+            <select id="setAppKeyAid" disabled>
+                <option value="">-- Select App --</option>
+            </select>
+            <label for="newAppKey">New Key</label>
+            <div class="input-with-icon">
+                <input type="password" id="newAppKey" size="35"/>
+                <button type="button" class="insertKeyBtn button icon-btn">
+                    <img src="/static/img/key.png" alt="Insert" style="width:16px;height:16px;">
+                </button>
+                <button type="button" id="toggleAppKeyVisibility" class="button">
+                    <img id="appEyeIcon" src="/static/img/eye.png" alt="Show/Hide" style="width:16px;height:16px;">
+                </button>
+            </div>
+            <button onclick="runChangeAppKey()">Set App Key</button>
+        </div>
+    </fieldset>
+</div>
+
+<div id="subtab-file" class="sub-tab-content">
+    <fieldset class="mfdes-fieldset">
+        <legend>Create File</legend>
+        <div class="mfdes-group">
+            <label for="createFileAid">App Name (AID)</label>
+            <select id="createFileAid" disabled>
+                <option value="">-- Select App --</option>
+            </select>
+            <button onclick="runCreateFile()">Create File</button>
+        </div>
+    </fieldset>
+    <fieldset class="mfdes-fieldset">
+        <legend>Write to File</legend>
+        <div class="mfdes-group">
+            <label for="writeFileAid">App Name (AID)</label>
+            <select id="writeFileAid" disabled>
+                <option value="">-- Select App --</option>
+            </select>
+            <label for="writeTextData">Plaintext to Write</label>
+            <input type="text" id="writeTextData" placeholder="Enter plain text" size="25"/>
+            <button onclick="runWriteFile()">Write to File</button>
+        </div>
+    </fieldset>
+</div>
+
+<div id="subtab-delete" class="sub-tab-content">
+    <fieldset class="mfdes-fieldset">
+        <legend>Delete App</legend>
+        <div class="mfdes-group">
+            <label for="deleteAppAid">App Name (AID)</label>
+            <select id="deleteAppAid" disabled>
+                <option value="">-- Select App --</option>
+            </select>
+            <button onclick="runDeleteApp()">Delete App</button>
+        </div>
+    </fieldset>
+    <fieldset class="mfdes-fieldset">
+        <legend>Delete File</legend>
+        <div class="mfdes-group">
+            <label for="deleteFileAid">App Name (AID)</label>
+            <select id="deleteFileAid" disabled>
+                <option value="">-- Select App --</option>
+            </select>
+            <label for="deleteFileFid">File ID (FID)</label>
+            <select id="deleteFileFid" disabled>
+                <option value="">-- Select File ID --</option>
+            </select>
+            <button onclick="runDeleteFile()">Delete File</button>
+        </div>
+    </fieldset>
+    <fieldset class="mfdes-fieldset">
+        <legend>Format card</legend>
+        <div class="mfdes-group">
+            <button onclick="runFreemem()">Check Free Memory</button>
+            <button onclick="confirmFormatCard()">Format Card</button>
+        </div>
+    </fieldset>
+</div>

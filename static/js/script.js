@@ -1,49 +1,44 @@
-let noAuthEnabled = false;
-
-function toggleNoAuth() {
-    noAuthEnabled = !noAuthEnabled;
-    const btn = document.getElementById('noAuthToggle');
-    btn.textContent = `No Auth: ${noAuthEnabled ? 'ON' : 'OFF'}`;
-    btn.classList.toggle('active', noAuthEnabled);
-}
-
-function getNoAuth() {
-    return noAuthEnabled;
-}
-
+// --- Tab switching logic ---
 document.addEventListener("DOMContentLoaded", function () {
-    const btn = document.getElementById('noAuthToggle');
-    let noAuthEnabled = false;
-
-    btn.addEventListener('click', function () {
-        noAuthEnabled = !noAuthEnabled;
-
-        btn.textContent = `No Auth: ${noAuthEnabled ? 'ON' : 'OFF'}`;
-        btn.classList.toggle('active', noAuthEnabled);
+    document.querySelectorAll('.tab-button').forEach(button => {
+        button.addEventListener('click', () => {
+            const tabId = button.getAttribute('data-tab');
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
+            button.classList.add('active');
+            const tabContent = document.getElementById(tabId);
+            tabContent.classList.add('active');
+            // Load MFDes tab content if tab3 is activated
+            if (tabId === 'tab3') {
+                loadMfdesTabContent();
+            }
+        });
     });
 
-    // Make it globally accessible if needed
-    window.getNoAuth = () => noAuthEnabled;
+    // On initial load, if tab3 is active, load its content
+    const tab3 = document.getElementById('tab3');
+    if (tab3 && tab3.classList.contains('active')) {
+        loadMfdesTabContent();
+    }
 });
 
-document.querySelectorAll('.tab-button').forEach(button => {
-    button.addEventListener('click', () => {
-        const tabId = button.getAttribute('data-tab');
+// --- MFDes tab content loading and sub-tabs ---
+function loadMfdesTabContent() {
+    const tab3 = document.getElementById('tab3');
+    if (tab3 && tab3.innerHTML.trim() === '') {
+        console.log('Loading MFDes tab content...');
+        fetch('/static/tabs/mfdes.html')
+            .then(res => res.text())
+            .then(html => {
+                tab3.innerHTML = html;
+                setupMfdesSubTabs(); // Re-attach sub-tab listeners
+            });
+    }
+}
 
-        // Remove active class from all buttons and contents
-        document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
-        document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
-
-        // Add active to clicked button and associated content
-        button.classList.add('active');
-        document.getElementById(tabId).classList.add('active');
-    });
-});
-
-// Sub-tab switching for MFDes
-document.addEventListener("DOMContentLoaded", function () {
-    const subTabButtons = document.querySelectorAll('.sub-tab-button');
-    const subTabContents = document.querySelectorAll('.sub-tab-content');
+function setupMfdesSubTabs() {
+    const subTabButtons = document.querySelectorAll('#tab3 .sub-tab-button');
+    const subTabContents = document.querySelectorAll('#tab3 .sub-tab-content');
 
     subTabButtons.forEach(button => {
         button.addEventListener('click', () => {
@@ -54,16 +49,25 @@ document.addEventListener("DOMContentLoaded", function () {
             document.getElementById(subTabId).classList.add('active');
         });
     });
+}
 
-    // Add event listener for deleteFileAid to load FIDs
-    const deleteFileAid = document.getElementById('deleteFileAid');
-    if (deleteFileAid) {
-        deleteFileAid.addEventListener('change', loadDeleteFileIds);
-    }
+// --- No Auth toggle ---
+document.addEventListener("DOMContentLoaded", function () {
+    const btn = document.getElementById('noAuthToggle');
+    let noAuthEnabled = false;
+
+    btn.addEventListener('click', function () {
+        noAuthEnabled = !noAuthEnabled;
+        btn.textContent = `No Auth: ${noAuthEnabled ? 'ON' : 'OFF'}`;
+        btn.classList.toggle('active', noAuthEnabled);
+    });
+
+    // Make it globally accessible if needed
+    window.getNoAuth = () => noAuthEnabled;
 });
 
 async function startPm3() {
-    const output = document.getElementById('output');  // same output area for all commands
+    const output = document.getElementById('output');
     const startBtn = document.getElementById('startPm3Btn');
     const path = document.getElementById('pm3path').value.trim();
 
@@ -111,17 +115,15 @@ function highlightOutput(text) {
         .replace(/(ATQA: .*)/g, '<span class="pm-atqa">$1</span>')
         .replace(/\b(NO)\b/g, '<span class="pm-no">$1</span>')
         .replace(/\b(YES)\b/g, '<span class="pm-yes">$1</span>');
-
 }
 
 function runFreemem() {
     let endpoint = 'hf/mfdes/freemem';
-    if (getNoAuth()) {
+    if (window.getNoAuth && window.getNoAuth()) {
         endpoint += '?no_auth=1';
     }
     runCmd(endpoint);
 }
-
 
 async function runCmd(endpoint) {
     const output = document.getElementById('output');
@@ -143,7 +145,7 @@ async function runDefault(event) {
 
     const type = document.getElementById('type').value;
     const keyStr = document.getElementById('key').value;
-    const key = toHex(keyStr);  // Convert string to hex
+    const key = toHex(keyStr);
 
     try {
         const res = await fetch(`/hf/mfdes/set-default?type=${encodeURIComponent(type)}&key=${encodeURIComponent(key)}`);
@@ -204,7 +206,7 @@ function toHex(str) {
 // Run strToHex() on Enter in the String input
 document.getElementById('strInput').addEventListener('keydown', function (e) {
     if (e.key === 'Enter') {
-        e.preventDefault(); // prevent form submission if inside a form
+        e.preventDefault();
         strToHex();
     }
 });
@@ -225,7 +227,6 @@ async function runSetMasterKey() {
         output.innerHTML = '<pre>Please enter a key.</pre>';
         return;
     }
-    // Convert key to hex
     let hexKey = '';
     for (let i = 0; i < keyStr.length; i++) {
         hexKey += keyStr.charCodeAt(i).toString(16).padStart(2, '0');
@@ -251,7 +252,7 @@ async function runFormatCard() {
     const output = document.getElementById('output');
     output.innerHTML = `<pre>Running hf mfdes formatpicc ... please wait.</pre>`;
     let endpoint = '/hf/mfdes/formatpicc';
-    if (getNoAuth()) {
+    if (window.getNoAuth && window.getNoAuth()) {
         endpoint += '?no_auth=1';
     }
     try {
@@ -263,6 +264,7 @@ async function runFormatCard() {
     }
 }
 
+// --- Password visibility toggles and insert key ---
 function setupPasswordToggle(toggleBtnId, eyeIconId, inputId) {
     const toggleBtn = document.getElementById(toggleBtnId);
     const eyeIcon = document.getElementById(eyeIconId);
@@ -290,12 +292,10 @@ document.addEventListener('DOMContentLoaded', function () {
     setupPasswordToggle('toggleRecoveryEncKeyVisibility', 'recoveryEncKeyEyeIcon', 'recoveryEncKey');
     setupPasswordToggle('toggleRecoveryEncKeyConfirmVisibility', 'recoveryEncKeyConfirmEyeIcon', 'recoveryEncKeyConfirm');
 
-
     // Insert master key on any insertKeyBtn click
     document.querySelectorAll('.insertKeyBtn').forEach(btn => {
         btn.addEventListener('click', function () {
             const masterKeyInput = document.getElementById('masterKeyGlobal');
-            // Find the input in the same .input-with-icon container
             const input = btn.parentElement.querySelector('input[type="password"], input[type="text"]');
             if (input && masterKeyInput) {
                 input.value = masterKeyInput.value;
