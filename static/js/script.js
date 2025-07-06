@@ -167,7 +167,6 @@ async function runSetDefaultProfile() {
     }
 }
 
-
 function strToHex() {
     const str = document.getElementById('strInput').value;
     let hexWithSpaces = '';
