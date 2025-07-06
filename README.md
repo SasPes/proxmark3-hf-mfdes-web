@@ -9,6 +9,7 @@
 5. Set App Key
 6. Create File
 7. Write to File
+8. Read file
 
 <img src="ss/MIFARE-DESFire-EV3.png" width="250">
 

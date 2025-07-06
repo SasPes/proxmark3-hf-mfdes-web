@@ -838,7 +838,7 @@ async function saveRecoveryCodes() {
     logs.push(`${step}<pre>${highlightOutput(text)}</pre>`);
     updateOutput();
     if (isError(text)) {
-        logs.push(stepBoxError('🚩 Stopped due to error!') + '<br>');
+        logs.push('<br>' + stepBoxError('🚩 Stopped due to error!'));
         updateOutput();
         return;
     }
@@ -862,6 +862,18 @@ async function saveRecoveryCodes() {
         hexCodes += codes.charCodeAt(i).toString(16).padStart(2, '0');
     }
     res = await fetch(`/hf/mfdes/write?aid=${aid}&fid=01&data=${hexCodes}&offset=000000`);
+    text = await res.text();
+    logs.push(`${step}<pre>${highlightOutput(text)}</pre>`);
+    updateOutput();
+    if (isError(text)) {
+        logs.push(stepBoxError('🚩 Stopped due to error!') + '<br>');
+        updateOutput();
+        return;
+    }
+
+    // Step 8: Read file
+    step = stepBox('Step 8: Reading file...');
+    res = await fetch(`/hf/mfdes/read?aid=${aid}&fid=01`);
     text = await res.text();
     logs.push(`${step}<pre>${highlightOutput(text)}</pre>`);
     updateOutput();
