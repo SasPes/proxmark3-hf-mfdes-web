@@ -52,12 +52,44 @@ Open your browser and go to [http://localhost:8000](http://localhost:8000).
 
 ## Usage
 
-- Use the tabs to access different features:
-  - Proxmark3: Start the Proxmark3 shell.
-  - MFDes Profile: Get/set default crypto profile.
-  - MFDes Commands: Run common MFDes commands.
-  - MFDes: Manage apps, files, keys, and formatting (with sub-tabs for Card, App, File, Delete).
-  - Tools: String <-> Hex conversion.
+Use the tabs to access different features:
+
+- **Proxmark3:**  
+  - Set the Proxmark3 executable path and start the shell.
+
+- **MFDes Profile:**  
+  - Get the current default MFDes profile (key and type).
+  - Set a new default profile by selecting the crypto type and entering a key.
+
+- **MFDes Commands:**  
+  - Run common MFDes commands (e.g., HF Search, Free Memory, Info, List Apps).
+
+- **MFDes (Card/App/File/Delete):**  
+  - **Set new card master key:**  
+    - Choose the new algorithm and enter the new key.
+    - Click "Set Master Key" to update the card's master key.
+  - **Set card default master key:**  
+    - Select "Current Algo" (DES/2TDEA/3TDEA/AES).
+    - Enter "Current Key" (the current master key).
+    - Click "Set default (DES/0...0)" to reset the master key to DES/0000000000000000.
+  - **Create MFDes App:**  
+    - Enter App ID, FID, DF Name, and select Key Algo.
+    - Click "Create App" to add a new application.
+  - **Set App Key:**  
+    - Select an app, enter a new key, and set it.
+  - **Create File:**  
+    - Select an app and create a new file.
+  - **Write to File:**  
+    - Select an app, enter plaintext, and write to the file.
+  - **Delete App/File:**  
+    - Select an app or file and delete it.
+  - **Format card:**  
+    - Format the card (all data will be erased).
+
+- **Tools:**  
+  - Convert between string and hex representations.
+
+**Other features:**
 - Use the "No Auth" toggle (top right) to enable/disable authentication for supported commands.
 - Dropdowns for AID and FID are auto-populated after loading apps.
 - Output and command results are shown at the bottom with color highlighting.
@@ -71,4 +103,4 @@ Open your browser and go to [http://localhost:8000](http://localhost:8000).
 
 ## License
 
-MIT License
+MIT License 
