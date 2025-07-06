@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Proxmark3 MIFARE DESFire Command Interface</title>
-    <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+    <link rel="icon" type="image/x-icon" href="/static/img/favicon.ico">
     <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
@@ -11,6 +11,13 @@
 
 <div class="no-auth-toggle-wrapper">
     <button id="noAuthToggle" class="toggle-btn">No Auth: OFF</button>
+    <br>
+    <div class="input-with-icon" style="margin-top: 10px;">
+        <input type="password" id="masterKeyGlobal" value="This is a test!!" size="9" placeholder="Master Key"/>
+        <button type="button" id="toggleMasterKeyVisibility" class="button">
+            <img id="masterEyeIcon" src="/static/img/eye.png" alt="Show/Hide" style="width:16px;height:16px;">
+        </button>
+    </div>
 </div>
 
 <div class="tabs">
@@ -48,9 +55,12 @@
                 </select>
                 <label for="key">Key</label>
                 <div class="input-with-icon">
-                    <input type="password" id="key" name="key" value="This is a test!!" size="30"/>
+                    <input type="password" id="key" name="key" size="30"/>
+                    <button type="button" class="insertKeyBtn button">
+                        <img src="/static/img/key.png" alt="Insert" style="width:16px;height:16px;">
+                    </button>
                     <button type="button" id="toggleKeyVisibility" class="button">
-                        <img id="eyeIcon" src="/static/eye.png" alt="Show/Hide" style="width:16px;height:16px;">
+                        <img id="eyeIcon" src="/static/img/eye.png" alt="Show/Hide" style="width:16px;height:16px;">
                     </button>
                 </div>
                 <button type="submit">Set profile</button>
@@ -108,7 +118,16 @@
                     <option value="aes" selected>AES</option>
                 </select>
                 <label for="masterKeyInput">Key</label>
-                <input type="text" id="masterKeyInput" value="This is a test!!" size="32"/>
+                <div class="input-with-icon">
+                    <input type="password" id="masterKeyInput" size="32"/>
+                    <button type="button" class="insertKeyBtn button">
+                        <img src="/static/img/key.png" alt="Insert" style="width:16px;height:16px;">
+                    </button>
+                    <button type="button" id="toggleMasterKeyInputVisibility" class="button">
+                        <img id="masterKeyInputEyeIcon" src="/static/img/eye.png" alt="Show/Hide"
+                             style="width:16px;height:16px;">
+                    </button>
+                </div>
                 <button onclick="runSetMasterKey()">Set Master Key</button>
             </div>
         </fieldset>
@@ -143,9 +162,12 @@
                 </select>
                 <label for="newAppKey">New Key</label>
                 <div class="input-with-icon">
-                    <input type="password" id="newAppKey" size="35" value="This is a test!!"/>
+                    <input type="password" id="newAppKey" size="35"/>
+                    <button type="button" class="insertKeyBtn button">
+                        <img src="/static/img/key.png" alt="Insert" style="width:16px;height:16px;">
+                    </button>
                     <button type="button" id="toggleAppKeyVisibility" class="button">
-                        <img id="appEyeIcon" src="/static/eye.png" alt="Show/Hide" style="width:16px;height:16px;">
+                        <img id="appEyeIcon" src="/static/img/eye.png" alt="Show/Hide" style="width:16px;height:16px;">
                     </button>
                 </div>
                 <button onclick="runChangeAppKey()">Set App Key</button>

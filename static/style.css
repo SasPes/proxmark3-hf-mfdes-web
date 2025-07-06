@@ -174,7 +174,7 @@ button:hover {
 }
 
 .toggle-btn.active {
-    background-color: #3498db;  /* bluish */
+    background-color: #3498db; /* bluish */
     color: white;
     border-color: #2e86c1;
 }
@@ -257,13 +257,32 @@ button:hover {
     width: fit-content;
 }
 
+.input-with-icon .insertKeyBtn {
+    position: absolute;
+    right: 25px;
+    top: 53%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    padding: 0;
+    margin: 0;
+    min-width: 0;
+    min-height: 0;
+    line-height: 1;
+    cursor: pointer;
+    z-index: 2;
+}
+
 .input-with-icon input[type="password"],
 .input-with-icon input[type="text"] {
     padding-right: 28px; /* space for the button */
     box-sizing: border-box;
 }
 
-#toggleKeyVisibility, #toggleAppKeyVisibility {
+#toggleKeyVisibility,
+#toggleAppKeyVisibility,
+#toggleMasterKeyVisibility,
+#toggleMasterKeyInputVisibility {
     position: absolute;
     right: 4px;
     top: 50%;
@@ -280,7 +299,10 @@ button:hover {
     z-index: 2;
 }
 
-#toggleKeyVisibility img, #toggleAppKeyVisibility img {
+#toggleKeyVisibility img,
+#toggleAppKeyVisibility img,
+#toggleMasterKeyVisibility img,
+#toggleMasterKeyInputVisibility img {
     width: 18px;
     height: 18px;
     display: block;

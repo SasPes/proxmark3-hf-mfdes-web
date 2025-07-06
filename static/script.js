@@ -700,4 +700,18 @@ function setupPasswordToggle(toggleBtnId, eyeIconId, inputId) {
 document.addEventListener('DOMContentLoaded', function () {
     setupPasswordToggle('toggleKeyVisibility', 'eyeIcon', 'key');
     setupPasswordToggle('toggleAppKeyVisibility', 'appEyeIcon', 'newAppKey');
+    setupPasswordToggle('toggleMasterKeyVisibility', 'masterEyeIcon', 'masterKeyGlobal');
+    setupPasswordToggle('toggleMasterKeyInputVisibility', 'masterKeyInputEyeIcon', 'masterKeyInput');
+
+    // Insert master key on any insertKeyBtn click
+    document.querySelectorAll('.insertKeyBtn').forEach(btn => {
+        btn.addEventListener('click', function () {
+            const masterKeyInput = document.getElementById('masterKeyGlobal');
+            // Find the input in the same .input-with-icon container
+            const input = btn.parentElement.querySelector('input[type="password"], input[type="text"]');
+            if (input && masterKeyInput) {
+                input.value = masterKeyInput.value;
+            }
+        });
+    });
 });
