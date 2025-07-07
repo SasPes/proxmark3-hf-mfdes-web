@@ -1,15 +1,13 @@
 # Proxmark3 MIFARE DESFire Web Interface
 
-My primary objective is to securely store recovery codes on a MIFARE DESFire card.
+A web-based interface for sending MIFARE DESFire commands to a Proxmark3 device.  
+**Primary goal:** Securely store recovery codes on a MIFARE DESFire card.
 
 <img src="ss/MIFARE-DESFire-EV3.png" width="250">
 
-A web-based interface for sending MIFARE DESFire commands to a Proxmark3 device.  
-Built with FastAPI (Python backend) and a modern HTML/JS frontend.
+![Screenshot](ss/ss1.png)
 
-![ss](ss/ss1.png)
-
-## Useful links
+### Useful links
 [Proxmark3Commands](https://github.com/SasPes/Proxmark3Commands)  
 [MIFARE DESFire](https://github.com/SasPes/Proxmark3Commands/blob/main/MIFARE%20DESFire.md)
 
@@ -17,7 +15,7 @@ Built with FastAPI (Python backend) and a modern HTML/JS frontend.
 
 - Start and control the Proxmark3 shell from your browser
 - Manage MFDes profiles and keys (set, get, change, master key)
-- Create and manage DESFire applications and files (create, delete, list)
+- Create, delete, and list DESFire applications and files
 - Read and write file data
 - String \<-\> Hex conversion tools
 - "No Auth" toggle for testing
@@ -25,19 +23,21 @@ Built with FastAPI (Python backend) and a modern HTML/JS frontend.
 - Output highlighting for command results
 - Automatic dropdown population for AIDs and FIDs
 
-### Encrypt card button
+### Store recovery codes workflows
+
+#### Encrypt card button
 1. Start Proxmark3
 2. Set Master Key
 3. Set profile
 
-### Store recovery codes to card
+#### Store recovery codes to card
 1. Check if app exists, create if not
 2. Set App Key
 3. Create File
 4. Write to File
 5. Read file
 
-### Wipe & Restore Card
+#### Wipe & Restore Card
 1. Check Free Memory
 2. Format Card
 3. Check Free Memory
@@ -45,26 +45,34 @@ Built with FastAPI (Python backend) and a modern HTML/JS frontend.
 5. Set default profile
 6. Get profile
 
-## Requirements
+---
+
+## Quick Start
+
+### Requirements
 
 - Python 3.8+
-- [Proxmark3](https://github.com/Proxmark/proxmark3) installed and accessible
+- [Proxmark3](https://github.com/Proxmark/proxmark3) (built and accessible)
 - [FastAPI](https://fastapi.tiangolo.com/)
 - [pexpect](https://pexpect.readthedocs.io/en/stable/)
-- [Uvicorn](https://www.uvicorn.org/) for running the server
+- [Uvicorn](https://www.uvicorn.org/)
 
-## Setup
+### Installation
 
-1. Clone this repository.
-2. Install dependencies:
+1. **Clone the repository:**
+    ```bash
+    git clone https://github.com/SasPes/proxmark3-hf-mfdes-web.git
+    cd proxmark3-hf-mfdes-web
     ```
+
+2. **Install dependencies:**
+    ```bash
     pip install fastapi pexpect uvicorn
     ```
-3. Make sure your Proxmark3 binary is built and available (default: `../proxmark3/pm3`).
 
-## Running
+3. **Ensure your Proxmark3 binary is available (default: `../proxmark3/pm3`).**
 
-Start the FastAPI server:
+### Running the Server
 
 ```bash
 uvicorn main:app --reload
@@ -72,56 +80,41 @@ uvicorn main:app --reload
 
 Open your browser and go to [http://localhost:8000](http://localhost:8000).
 
-## Usage
+---
+
+## Usage Overview
 
 Use the tabs to access different features:
 
-- **Proxmark3:**  
-  - Set the Proxmark3 executable path and start the shell.
+- **Proxmark3**  
+  - Set the Proxmark3 executable path and start the shell
 
-- **MFDes Profile:**  
-  - Get the current default MFDes profile (key and type).
-  - Set a new default profile by selecting the crypto type and entering a key.
+- **MFDes Profile**  
+  - Get or set the default MFDes profile (key and type)
 
-- **MFDes Commands:**  
-  - Run common MFDes commands (e.g., HF Search, Free Memory, Info, List Apps).
+- **MFDes Commands**  
+  - Run common MFDes commands (e.g., HF Search, Free Memory, Info, List Apps)
 
-- **MFDes (Card/App/File/Delete):**  
-  - **Set new card master key:**  
-    - Choose the new algorithm and enter the new key.
-    - Click "Set Master Key" to update the card's master key.
-  - **Set card default master key:**  
-    - Select "Current Algo" (DES/2TDEA/3TDEA/AES).
-    - Enter "Current Key" (the current master key).
-    - Click "Set default (DES/0...0)" to reset the master key to DES/0000000000000000.
-  - **Create MFDes App:**  
-    - Enter App ID, FID, DF Name, and select Key Algo.
-    - Click "Create App" to add a new application.
-  - **Set App Key:**  
-    - Select an app, enter a new key, and set it.
-  - **Create File:**  
-    - Select an app and create a new file.
-  - **Write to File:**  
-    - Select an app, enter plaintext, and write to the file.
-  - **Delete App/File:**  
-    - Select an app or file and delete it.
-  - **Format card:**  
-    - Format the card (all data will be erased).
+- **MFDes (Card/App/File/Delete)**  
+  - Set or reset card master key
+  - Create or delete MFDes applications and files
+  - Set app keys
+  - Write/read file data
+  - Format card
 
-- **Tools:**  
-  - Convert between string and hex representations.
+- **Tools**  
+  - Convert between string and hex representations
 
 **Other features:**
-- Use the "No Auth" toggle (top right) to enable/disable authentication for supported commands.
-- Dropdowns for AID and FID are auto-populated after loading apps.
-- Output and command results are shown at the bottom with color highlighting.
+- "No Auth" toggle disables authentication for supported commands
+- Dropdowns for AID and FID auto-populate after loading apps
+- Output and command results are color-highlighted
 
 ## Notes
 
-- The backend uses pexpect to control the Proxmark3 shell.
-- Some features require a connected Proxmark3 device.
-- The "No Auth" toggle disables authentication for supported commands.
-- All communication is via HTTP GET requests from the frontend to the FastAPI backend.
+- The backend uses pexpect to control the Proxmark3 shell
+- Some features require a connected Proxmark3 device
+- All communication is via HTTP GET requests from the frontend to the FastAPI backend
 
 ## License
 
