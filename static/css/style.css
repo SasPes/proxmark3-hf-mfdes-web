@@ -245,3 +245,8 @@ table {
     border-collapse: separate;
     border-spacing: 12px 8px;
 }
+
+.icon-16 {
+    width: 16px;
+    height: 16px;
+}
