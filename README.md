@@ -1,7 +1,10 @@
 # Proxmark3 MIFARE DESFire Web Interface
 
 A web-based interface for sending MIFARE DESFire commands to a Proxmark3 device.  
+
 **Primary goal:** Securely store recovery codes on a MIFARE DESFire card.
+
+> On **MIFARE DESFire EV3 4K** card with **5120 bytes** free memory (even though 4K = 4096 bytes), you can store up to **7 apps** (about 680 bytes per app), each with **16 recovery codes** (e.g., GitHub) 
 
 <img src="ss/MIFARE-DESFire-EV3.png" width="250">
 
