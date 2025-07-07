@@ -23,25 +23,31 @@
         </button>
     </div>
     <button onclick="runSetMasterKeyRecoveryCodes()">Encrypt card</button>
-    <button class="recovery-full-btn cleanup" onclick="confirmCleanupCard()">Wipe &amp; Restore Card</button>
+    <button class="recovery-full-btn cleanup" onclick="confirmCleanupCard()">Wipe & Restore Card</button>
 </fieldset>
 <fieldset class="mfdes-fieldset" style="position:relative;">
     <legend>Store recovery codes</legend>
     <button
-            style="position:absolute; top:3px; right:30px; z-index:2;"
-            onclick="runFreemem()"
-            title="Check Free Memory">
+            style="position:absolute; top:3px; right:180px; z-index:2;"
+            onclick="runFreemem()">
         Check Free Memory
+    </button>
+    <button
+            class="recovery-full-btn cleanup"
+            style="position:absolute; top:3px; right:30px; z-index:2;"
+            onclick="generateRandomRecoveryCodes()"
+            title="Generate Random App Name and Recovery Codes">
+        Generate Codes
     </button>
     <table>
         <tr>
             <td style="width:33%;">
                 <label for="recoveryAppName">App Name</label>
-                <input type="text" id="recoveryAppName" value="github"/>
+                <input type="text" id="recoveryAppName"/>
             </td>
             <td rowspan="2" style="width:67%; vertical-align:top;">
                 <label for="recoveryCodes" style="text-align:left; display:block;">Recovery Codes</label><br>
-                <textarea id="recoveryCodes" rows="2" cols="32" style="width:98%; resize:vertical;">c9sye-vpw90, so7aw-4f82w, z9a73-3deh2</textarea>
+                <textarea id="recoveryCodes" rows="2" cols="32" style="width:98%; resize:vertical;"></textarea>
             </td>
         </tr>
         <tr>

@@ -1,3 +1,5 @@
+const RECOVERY_CODE_CHARS = 'abcdefghijklmnopqrstuvwxyz0123456789';
+
 async function runSetDefaultMasterKey() {
     const output = document.getElementById('output');
     output.innerHTML = `<pre>Setting default master key (to DES/0...0)...</pre>`;
@@ -332,4 +334,21 @@ async function cleanupCard() {
 
     logs.push(stepBox('Wipe & Restore Card completed.') + '<br>');
     updateOutput();
+}
+
+function generateRandomRecoveryCodes() {
+    const appNames = ['github', 'google', 'amazon', 'microsoft', 'apple'];
+    const randomApp = appNames[Math.floor(Math.random() * appNames.length)];
+    const randomSuffix = Array.from({length: 4}, () =>
+        RECOVERY_CODE_CHARS[Math.floor(Math.random() * RECOVERY_CODE_CHARS.length)]
+    ).join('');
+    document.getElementById('recoveryAppName').value = `${randomApp}-${randomSuffix}`;
+
+    function randomCode() {
+        const part = () => Array.from({length: 5}, () => RECOVERY_CODE_CHARS[Math.floor(Math.random() * RECOVERY_CODE_CHARS.length)]).join('');
+        return `${part()}-${part()}`;
+    }
+
+    const codes = Array.from({length: 16}, randomCode).join('\n');
+    document.getElementById('recoveryCodes').value = codes;
 }
