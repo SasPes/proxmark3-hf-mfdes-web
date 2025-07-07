@@ -209,6 +209,7 @@ button.recovery-full-btn.cleanup {
     color: #3498db !important;
     border: 1px solid #3498db !important;
 }
+
 button.recovery-full-btn.cleanup:hover,
 button.recovery-full-btn.cleanup:focus {
     background: #eaf4fb !important;
@@ -222,12 +223,25 @@ button.toggle-btn:not(.active) {
     border: 1px solid #3498db !important;
     font-weight: bold;
 }
+
 button.toggle-btn.active {
     /* No change needed, keep as is */
 }
+
 button.toggle-btn:not(.active):hover,
 button.toggle-btn:not(.active):focus {
     background: #eaf4fb !important;
     color: #217dbb !important;
     border-color: #217dbb !important;
+}
+
+table {
+    max-width: 1000px;
+    width: 100%;
+    table-layout: auto;
+    text-align: center;
+    vertical-align: middle;
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 12px 8px;
 }
