@@ -1,25 +1,6 @@
 # Proxmark3 MIFARE DESFire Web Interface
 
-
-## Encrypt card button
-1. Start Proxmark3
-2. Set Master Key
-3. Set profile
-
-## Store recovery codes to card
-1. Check if app exists, create if not
-2. Set App Key
-3. Create File
-4. Write to File
-5. Read file
-
-## Wipe & Restore Card
-1. Check Free Memory
-2. Format Card
-3. Check Free Memory
-4. Set default (DES/0...0)
-5. Set default profile
-6. Get profile
+My primary objective is to securely store recovery codes on a MIFARE DESFire card.
 
 <img src="ss/MIFARE-DESFire-EV3.png" width="250">
 
@@ -43,6 +24,26 @@ Built with FastAPI (Python backend) and a modern HTML/JS frontend.
 - Tabbed and sub-tabbed UI for easy navigation
 - Output highlighting for command results
 - Automatic dropdown population for AIDs and FIDs
+
+### Encrypt card button
+1. Start Proxmark3
+2. Set Master Key
+3. Set profile
+
+### Store recovery codes to card
+1. Check if app exists, create if not
+2. Set App Key
+3. Create File
+4. Write to File
+5. Read file
+
+### Wipe & Restore Card
+1. Check Free Memory
+2. Format Card
+3. Check Free Memory
+4. Set default (DES/0...0)
+5. Set default profile
+6. Get profile
 
 ## Requirements
 
