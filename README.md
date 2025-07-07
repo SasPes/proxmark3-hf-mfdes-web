@@ -7,9 +7,10 @@ A web-based interface for sending MIFARE DESFire commands to a Proxmark3 device.
 
 ![Screenshot](ss/ss1.png)
 
-### Useful links
-[Proxmark3Commands](https://github.com/SasPes/Proxmark3Commands)  
-[MIFARE DESFire](https://github.com/SasPes/Proxmark3Commands/blob/main/MIFARE%20DESFire.md)
+### Useful Links
+
+- [Proxmark3Commands](https://github.com/SasPes/Proxmark3Commands)
+- [MIFARE DESFire Guide](https://github.com/SasPes/Proxmark3Commands/blob/main/MIFARE%20DESFire.md)
 
 ## Features
 
@@ -23,14 +24,16 @@ A web-based interface for sending MIFARE DESFire commands to a Proxmark3 device.
 - Output highlighting for command results
 - Automatic dropdown population for AIDs and FIDs
 
-### Store recovery codes workflows
+### Store Recovery Codes Workflows
 
-#### Encrypt card button
+#### Encrypt Card Button
+
 1. Start Proxmark3
 2. Set Master Key
 3. Set profile
 
-#### Store recovery codes to card
+#### Store Recovery Codes to Card
+
 1. Check if app exists, create if not
 2. Set App Key
 3. Create File
@@ -38,6 +41,7 @@ A web-based interface for sending MIFARE DESFire commands to a Proxmark3 device.
 5. Read file
 
 #### Wipe & Restore Card
+
 1. Check Free Memory
 2. Format Card
 3. Check Free Memory
@@ -115,7 +119,7 @@ Use the tabs to access different features:
 - The backend uses pexpect to control the Proxmark3 shell
 - Some features require a connected Proxmark3 device
 - All communication is via HTTP GET requests from the frontend to the FastAPI backend
-
+- All commands and their outputs are logged to a file in the `log` directory
 ## License
 
 MIT License 
