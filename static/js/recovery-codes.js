@@ -237,6 +237,12 @@ async function saveRecoveryCodes() {
     updateOutput();
 }
 
+function confirmCleanupCard() {
+    if (confirm("Are you sure you want to wipe and restore the card?\nThis action cannot be undone!")) {
+        cleanupCard();
+    }
+}
+
 async function cleanupCard() {
     const output = document.getElementById('output');
     const logs = [];
@@ -300,7 +306,7 @@ async function cleanupCard() {
     logs.push(`${step}<pre>${highlightOutput(text)}</pre>`);
     updateOutput();
     if (isError(text)) {
-        logs.push(stepBoxError('🚩 Stopped due to error!') + '<br>');
+        logs.push(stepBoxError('🚩 Stopped due to error or card already wiped & restored!') + '<br>');
         updateOutput();
         return;
     }
