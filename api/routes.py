@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Query
 from fastapi.responses import PlainTextResponse, FileResponse
-from api.utils import logging, clean_output, NO_AUTH, DEFAULT_AES_KEY, DEFAULT_DES_KEY
+from api.utils import logging, clean_output, NO_AUTH, DEFAULT_AES_KEY, DEFAULT_DES_KEY, AES, CRYPTO_TYPE_REGEX
 import pexpect
 
 router = APIRouter()
@@ -72,7 +72,7 @@ def hf_mfdes_get_default():
 @router.get("/hf/mfdes/set-default", response_class=PlainTextResponse)
 def hf_mfdes_default(
         key: str = Query(..., description="Hex key"),
-        type: str = Query("AES", regex="^(DES|2TDEA|3TDEA|AES)$", description="Crypto type")
+        type: str = Query(AES, regex=CRYPTO_TYPE_REGEX, description="Crypto type")
 ):
     cmd = f"hf mfdes default -n 0 -t {type} -k {key}"
     return send_command(cmd)
@@ -80,7 +80,7 @@ def hf_mfdes_default(
 
 @router.get("/hf/mfdes/changekey-master", response_class=PlainTextResponse)
 def changekey_master(
-        newalgo: str = Query("aes"),
+        newalgo: str = Query(AES),
         newkey: str = Query(...)
 ):
     t = "des"
@@ -90,7 +90,7 @@ def changekey_master(
 
 @router.get("/hf/mfdes/changekey-master-default", response_class=PlainTextResponse)
 def changekey_master_default(
-        oldalgo: str = Query("aes"),
+        oldalgo: str = Query(AES),
         oldkey: str = Query(...)
 ):
     cmd = f"hf mfdes changekey -t {oldalgo} -k {oldkey} --newalgo des --newkey {DEFAULT_DES_KEY}"
@@ -131,7 +131,7 @@ def mfdes_createapp(aid: str, fid: str, dfname: str, dstalgo: str):
 
 
 @router.get("/hf/mfdes/changekey", response_class=PlainTextResponse)
-def change_app_key(aid: str, newkey: str, key_type: str = "AES"):
+def change_app_key(aid: str, newkey: str, key_type: str = AES):
     cmd = f"hf mfdes changekey --aid {aid} -t {key_type} --key {DEFAULT_AES_KEY} --newkey {newkey}"
     return send_command(cmd)
 

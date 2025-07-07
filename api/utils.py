@@ -6,6 +6,8 @@ from datetime import datetime
 NO_AUTH = " --no-auth"
 DEFAULT_AES_KEY = "00000000000000000000000000000000"
 DEFAULT_DES_KEY = "0000000000000000"
+CRYPTO_TYPE_REGEX = r"^(DES|2TDEA|3TDEA|AES)$"
+AES = "AES"
 
 log_dir = 'log'
 os.makedirs(log_dir, exist_ok=True)
