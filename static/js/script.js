@@ -33,6 +33,18 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 
+function setupInsertKeyButtons() {
+    document.querySelectorAll('.insertKeyBtn').forEach(btn => {
+        btn.addEventListener('click', function () {
+            const masterKeyInput = document.getElementById('masterKeyGlobal');
+            const input = btn.parentElement.querySelector('input[type="password"], input[type="text"]');
+            if (input && masterKeyInput) {
+                input.value = masterKeyInput.value;
+            }
+        });
+    });
+}
+
 function loadMfdesTabContent() {
     const tab3 = document.getElementById('tab3');
     if (tab3 && tab3.innerHTML.trim() === '') {
@@ -42,6 +54,11 @@ function loadMfdesTabContent() {
             .then(html => {
                 tab3.innerHTML = html;
                 setupMfdesSubTabs();
+                setupInsertKeyButtons();
+
+                setupPasswordToggle('toggleMasterKeyInputVisibility', 'masterKeyInputEyeIcon', 'masterKeyInput');
+                setupPasswordToggle('toggleMasterKeyDefaultOldKeyVisibility', 'masterKeyDefaultOldKeyEyeIcon', 'masterKeyDefaultOldKey');
+                setupPasswordToggle('toggleAppKeyVisibility', 'appEyeIcon', 'newAppKey');
             });
     }
 }
@@ -53,7 +70,10 @@ function loadRecoveryTabContent() {
             .then(res => res.text())
             .then(html => {
                 tab5.innerHTML = html;
-                // Optionally, re-initialize any JS needed for this tab
+                setupInsertKeyButtons();
+
+                setupPasswordToggle('toggleRecoveryEncKeyVisibility', 'recoveryEncKeyEyeIcon', 'recoveryEncKey');
+                setupPasswordToggle('toggleRecoveryEncKeyConfirmVisibility', 'recoveryEncKeyConfirmEyeIcon', 'recoveryEncKeyConfirm');
             });
     }
 }
