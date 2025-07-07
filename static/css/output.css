@@ -1,0 +1,84 @@
+.output {
+    border: 1px solid #1b4f72;
+    background: #f9f9f9;
+    padding: 10px;
+    height: 400px;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    border-radius: 6px;
+    font-family: monospace;
+    color: #333;
+    margin-top: 1rem;
+}
+
+.pm-success {
+    color: green;
+    /*font-weight: bold;*/
+}
+
+.pm-info {
+    color: blue;
+}
+
+.pm-warn {
+    color: orange;
+    font-weight: bold;
+}
+
+.pm-error {
+    color: red;
+    font-weight: bold;
+}
+
+.pm-uid {
+    color: #800080;
+    font-style: italic;
+}
+
+.pm-atqa {
+    color: #008080;
+}
+
+.pm-equal {
+    color: #296eb3;
+    font-weight: bold;
+}
+
+.pm-question {
+    color: #9932CC;
+    font-weight: bold;
+}
+
+.pm-success-detail {
+
+    color: #1b4f72;
+    font-weight: bold;
+}
+
+.pm-success-hash {
+    color: #050c93;
+    font-weight: bold;
+    font-style: normal;
+}
+
+.pm-success-auth {
+    color: #005c5c; /* Teal */
+    font-weight: bold;
+    font-style: normal;
+}
+
+.pm-error-double {
+    color: crimson;
+    font-weight: bold;
+    font-style: italic;
+}
+
+.pm-no {
+    color: crimson;
+    font-weight: bold;
+}
+
+.pm-yes {
+    color: green;
+    font-weight: bold;
+}
