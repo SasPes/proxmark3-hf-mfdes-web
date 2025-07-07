@@ -3,9 +3,21 @@ import pexpect
 from fastapi import FastAPI, Query
 from fastapi.responses import PlainTextResponse, FileResponse
 from fastapi.staticfiles import StaticFiles
+import os
+from datetime import datetime
+import logging
 
 NO_AUTH = " --no-auth"
+log_dir = 'log'
+os.makedirs(log_dir, exist_ok=True)
 
+log_filename = os.path.join(log_dir, f'command_output_{datetime.now():%Y%m%d_%H%M%S}.log')
+
+logging.basicConfig(
+    filename=log_filename,
+    level=logging.INFO,
+    format='%(asctime)s - %(message)s'
+)
 app = FastAPI()
 
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -27,9 +39,12 @@ def send_command(cmd: str) -> str:
     global pm3
     if pm3 is None or not pm3.isalive():
         return "Proxmark3 shell is not running. Please start it first."
+    logging.info(f'COMMAND: {cmd}')
     pm3.sendline(cmd)
     pm3.expect(r'pm3 -->')
-    return clean_output(pm3.before)
+    output = clean_output(pm3.before)
+    logging.info(f'OUTPUT: {output}')
+    return output
 
 
 @app.get("/", response_class=FileResponse)
