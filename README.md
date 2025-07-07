@@ -7,7 +7,7 @@ My primary objective is to securely store recovery codes on a MIFARE DESFire car
 A web-based interface for sending MIFARE DESFire commands to a Proxmark3 device.  
 Built with FastAPI (Python backend) and a modern HTML/JS frontend.
 
-![ss](ss/ss.png)
+![ss](ss/ss1.png)
 
 ## Useful links
 [Proxmark3Commands](https://github.com/SasPes/Proxmark3Commands)  
