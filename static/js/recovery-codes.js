@@ -19,7 +19,7 @@ async function runSetDefaultMasterKey() {
     }
 }
 
-async function runSetMasterKey() {
+async function runSetMasterKeyRecoveryCodes() {
     const key = document.getElementById('recoveryEncKey').value;
     const keyConfirm = document.getElementById('recoveryEncKeyConfirm').value;
     const output = document.getElementById('output');
