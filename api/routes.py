@@ -124,7 +124,7 @@ def mfdes_read(aid: str, fid: str, no_auth: bool = Query(False)):
 @router.get("/hf/mfdes/createapp", response_class=PlainTextResponse)
 def mfdes_createapp(aid: str, fid: str, dfname: str, dstalgo: str):
     # ks1 and ks2 fixed as per your example
-    ks1 = "0B"
+    ks1 = "09"
     ks2 = "AE"
     cmd = f"hf mfdes createapp --aid {aid} --fid {fid} --dfname {dfname} --dstalgo {dstalgo} --ks1 {ks1} --ks2 {ks2}"
     return send_command(cmd)
