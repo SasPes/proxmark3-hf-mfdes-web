@@ -36,7 +36,7 @@ A web-based interface for sending MIFARE DESFire commands to a Proxmark3 device.
 2. Set Master Key
 3. Set profile
 
-#### Store Recovery Codes to Card
+#### Store Recovery Codes
 
 1. Check if app exists, create if not
 2. Set App Key
