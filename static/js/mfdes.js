@@ -33,7 +33,7 @@ async function loadAppNames() {
 
         // Parse AID and app name
         const appOptions = [];
-        const regex = /\[=\] AID: (\d+) .* ISO DF name\[\d+\]:\s*(.+)$/gm;
+        const regex = /\[=\] AID: ([0-9a-fA-F]+).*ISO DF name\[\d+\]:\s*(.+)$/gm;
         let match;
         while ((match = regex.exec(text)) !== null) {
             const aid = match[1].padStart(6, '0');
