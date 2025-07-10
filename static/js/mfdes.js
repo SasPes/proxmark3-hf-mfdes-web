@@ -20,27 +20,51 @@ async function loadAppNames() {
 
     loadAppsBtn.disabled = true;
 
-    const endpoint = getNoAuth() ? 'hf/mfdes/getappnames?noauth=1' : 'hf/mfdes/getappnames';
+    const noauth = getNoAuth();
+    const aidsEndpoint = noauth ? 'hf/mfdes/getaids?noauth=1' : 'hf/mfdes/getaids';
+    const appNamesEndpoint = noauth ? 'hf/mfdes/getappnames?noauth=1' : 'hf/mfdes/getappnames';
 
-    output.innerHTML = `<pre>Running ${endpoint} ... please wait.</pre>`;
+    output.innerHTML = `<pre>Running ${aidsEndpoint} ... please wait.</pre>`;
 
     try {
-        const res = await fetch(`/${endpoint}`);
-        if (!res.ok) throw new Error(res.statusText);
-        const text = await res.text();
+        // 1. Fetch AIDs
+        const aidsRes = await fetch(`/${aidsEndpoint}`);
+        if (!aidsRes.ok) throw new Error(aidsRes.statusText);
+        const aidsText = await aidsRes.text();
 
-        output.innerHTML = `<pre>${highlightOutput(text)}</pre>`;
-
-        // Parse AID and app name
-        const appOptions = [];
-        const regex = /\[=\] AID: ([0-9a-fA-F]+).*ISO DF name\[\d+\]:\s*(.+)$/gm;
+        // Parse AIDs
+        const aids = [];
+        const aidRegex = /\[\+\] ([0-9A-Fa-f]{6})/g;
         let match;
-        while ((match = regex.exec(text)) !== null) {
-            const aid = match[1].padStart(6, '0');
-            const name = match[2].trim();
-            appOptions.push({aid, name});
+        while ((match = aidRegex.exec(aidsText)) !== null) {
+            aids.push(match[1].toUpperCase());
         }
 
+        output.innerHTML = `<pre>${highlightOutput(aidsText)}\nRunning ${appNamesEndpoint} ... please wait.</pre>`;
+
+        // 2. Fetch app names
+        const appNamesRes = await fetch(`/${appNamesEndpoint}`);
+        if (!appNamesRes.ok) throw new Error(appNamesRes.statusText);
+        const appNamesText = await appNamesRes.text();
+
+        output.innerHTML = `<pre>${highlightOutput(aidsText)}\n${highlightOutput(appNamesText)}</pre>`;
+
+        // Parse AID and app name
+        const appNameMap = {};
+        const appNameRegex = /\[=\] AID: ([0-9a-fA-F]+) ISO file id: \d+ ISO DF name\[\d+\]:\s*(.+)$/gm;
+        while ((match = appNameRegex.exec(appNamesText)) !== null) {
+            const aid = match[1].toUpperCase().padStart(6, '0');
+            const name = match[2].trim();
+            appNameMap[aid] = name;
+        }
+
+        // Build options: use name if present, else AID
+        const appOptions = aids.map(aid => ({
+            aid,
+            name: appNameMap[aid] ? `${appNameMap[aid]}` : aid
+        }));
+
+        // Populate dropdowns
         if (appOptions.length === 0) {
             select.innerHTML = '<option value="">No apps found</option>';
             select.disabled = true;
@@ -59,26 +83,22 @@ async function loadAppNames() {
                 deleteAppAidSelect.disabled = true;
             }
         } else {
-            select.innerHTML = `<option value="">-- Select App --</option>` +
+            const optionsHtml = `<option value="">-- Select App --</option>` +
                 appOptions.map(opt => `<option value="${opt.aid}">${opt.name}</option>`).join('');
+            select.innerHTML = optionsHtml;
             select.disabled = false;
-            setKeyAidSelect.innerHTML = `<option value="">-- Select App --</option>` +
-                appOptions.map(opt => `<option value="${opt.aid}">${opt.name}</option>`).join('');
+            setKeyAidSelect.innerHTML = optionsHtml;
             setKeyAidSelect.disabled = false;
-            createFileAidSelect.innerHTML = `<option value="">-- Select App --</option>` +
-                appOptions.map(opt => `<option value="${opt.aid}">${opt.name}</option>`).join('');
+            createFileAidSelect.innerHTML = optionsHtml;
             createFileAidSelect.disabled = false;
-            writeFileAidSelect.innerHTML = `<option value="">-- Select App --</option>` +
-                appOptions.map(opt => `<option value="${opt.aid}">${opt.name}</option>`).join('');
+            writeFileAidSelect.innerHTML = optionsHtml;
             writeFileAidSelect.disabled = false;
             if (deleteFileAidSelect) {
-                deleteFileAidSelect.innerHTML = `<option value="">-- Select App --</option>` +
-                    appOptions.map(opt => `<option value="${opt.aid}">${opt.name}</option>`).join('');
+                deleteFileAidSelect.innerHTML = optionsHtml;
                 deleteFileAidSelect.disabled = false;
             }
             if (deleteAppAidSelect) {
-                deleteAppAidSelect.innerHTML = `<option value="">-- Select App --</option>` +
-                    appOptions.map(opt => `<option value="${opt.aid}">${opt.name}</option>`).join('');
+                deleteAppAidSelect.innerHTML = optionsHtml;
                 deleteAppAidSelect.disabled = false;
             }
         }
