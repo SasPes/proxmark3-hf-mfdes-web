@@ -1,12 +1,21 @@
+function appendLogsParam(endpoint) {
+    if (window.getLogsEnabled && window.getLogsEnabled()) {
+        return endpoint + (endpoint.includes('?') ? '&' : '?') + 'logs=1';
+    }
+    return endpoint;
+}
+
 function runFreemem() {
     let endpoint = 'hf/mfdes/freemem';
     if (window.getNoAuth && window.getNoAuth()) {
         endpoint += '?no_auth=1';
     }
+    endpoint = appendLogsParam(endpoint);
     runCmd(endpoint);
 }
 
 async function runCmd(endpoint) {
+    endpoint = appendLogsParam(endpoint);
     const output = document.getElementById('output');
     output.innerHTML = `Running ${endpoint}... Please wait.`;
     try {
@@ -21,15 +30,12 @@ async function runCmd(endpoint) {
 
 async function runDefault(event) {
     event.preventDefault();
+    let endpoint = `/hf/mfdes/set-default?type=${encodeURIComponent(document.getElementById('type').value)}&key=${encodeURIComponent(toHex(document.getElementById('key').value))}`;
+    endpoint = appendLogsParam(endpoint);
     const out = document.getElementById('output');
     out.innerHTML = `<pre>Running MFDes Profile command (hf mfdes default)...</pre>`;
-
-    const type = document.getElementById('type').value;
-    const keyStr = document.getElementById('key').value;
-    const key = toHex(keyStr);
-
     try {
-        const res = await fetch(`/hf/mfdes/set-default?type=${encodeURIComponent(type)}&key=${encodeURIComponent(key)}`);
+        const res = await fetch(endpoint);
         const text = await res.text();
         out.innerHTML = `<pre>${highlightOutput(text)}</pre>`;
     } catch (err) {
@@ -38,11 +44,12 @@ async function runDefault(event) {
 }
 
 async function runSetDefaultProfile() {
+    let endpoint = `/hf/mfdes/set-default?type=DES&key=0000000000000000`;
+    endpoint = appendLogsParam(endpoint);
     const out = document.getElementById('output');
     out.innerHTML = `<pre>Setting default profile to DES / 0000000000000000...</pre>`;
-
     try {
-        const res = await fetch(`/hf/mfdes/set-default?type=DES&key=0000000000000000`);
+        const res = await fetch(endpoint);
         const text = await res.text();
         out.innerHTML = `<pre>${highlightOutput(text)}</pre>`;
     } catch (err) {
@@ -63,6 +70,7 @@ async function runSetMasterKey() {
         hexKey += keyStr.charCodeAt(i).toString(16).padStart(2, '0');
     }
     let endpoint = `/hf/mfdes/changekey-master?newalgo=${newAlgo}&newkey=${hexKey}`;
+    endpoint = appendLogsParam(endpoint);
     output.innerHTML = `<pre>Running ${endpoint} ... please wait.</pre>`;
     try {
         const res = await fetch(endpoint);
@@ -80,12 +88,13 @@ function confirmFormatCard() {
 }
 
 async function runFormatCard() {
-    const output = document.getElementById('output');
-    output.innerHTML = `<pre>Running hf mfdes formatpicc ... please wait.</pre>`;
     let endpoint = '/hf/mfdes/formatpicc';
     if (window.getNoAuth && window.getNoAuth()) {
         endpoint += '?no_auth=1';
     }
+    endpoint = appendLogsParam(endpoint);
+    const output = document.getElementById('output');
+    output.innerHTML = `<pre>Running hf mfdes formatpicc ... please wait.</pre>`;
     try {
         const res = await fetch(endpoint);
         const text = await res.text();

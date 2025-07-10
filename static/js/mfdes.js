@@ -1,12 +1,20 @@
+function appendLogsParam(endpoint) {
+    if (window.getLogsEnabled && window.getLogsEnabled()) {
+        return endpoint + (endpoint.includes('?') ? '&' : '?') + 'logs=1';
+    }
+    return endpoint;
+}
+
 function runMfdesLsApp() {
     let endpoint = 'hf/mfdes/lsapp';
     if (getNoAuth()) {
         endpoint += '?no_auth=true';
     }
+    endpoint = appendLogsParam(endpoint);
     runCmd(endpoint);
 }
 
-// Called after loading apps to fill appname dropdown
+// Load app names and AIDs for dropdowns
 async function loadAppNames() {
     const select = document.getElementById('appname');
     const output = document.getElementById('output');
@@ -21,8 +29,11 @@ async function loadAppNames() {
     loadAppsBtn.disabled = true;
 
     const noauth = getNoAuth();
-    const aidsEndpoint = noauth ? 'hf/mfdes/getaids?noauth=1' : 'hf/mfdes/getaids';
-    const appNamesEndpoint = noauth ? 'hf/mfdes/getappnames?noauth=1' : 'hf/mfdes/getappnames';
+    let aidsEndpoint = noauth ? 'hf/mfdes/getaids?noauth=1' : 'hf/mfdes/getaids';
+    let appNamesEndpoint = noauth ? 'hf/mfdes/getappnames?noauth=1' : 'hf/mfdes/getappnames';
+
+    aidsEndpoint = appendLogsParam(aidsEndpoint);
+    appNamesEndpoint = appendLogsParam(appNamesEndpoint);
 
     output.innerHTML = `<pre>Running ${aidsEndpoint} ... please wait.</pre>`;
 
@@ -151,6 +162,7 @@ async function loadFileIds() {
     if (getNoAuth()) {
         endpoint += '&no_auth=1';
     }
+    endpoint = appendLogsParam(endpoint);
 
     output.innerHTML = `<pre>Running ${endpoint} ... please wait.</pre>`;
 
@@ -204,6 +216,7 @@ async function loadDeleteFileIds() {
     if (getNoAuth()) {
         endpoint += '&no_auth=1';
     }
+    endpoint = appendLogsParam(endpoint);
 
     output.innerHTML = `<pre>Running ${endpoint} ... please wait.</pre>`;
 
@@ -256,6 +269,7 @@ async function runRead() {
     if (getNoAuth()) {
         endpoint += '&no_auth=1';
     }
+    endpoint = appendLogsParam(endpoint);
 
     output.innerHTML = `<pre>Running ${endpoint} ... please wait.</pre>`;
 
@@ -292,6 +306,7 @@ async function runCreateApp() {
 
     let endpoint = `/hf/mfdes/createapp?aid=${encodeURIComponent(aid)}&fid=${encodeURIComponent(fid)}&dfname=${encodeURIComponent(dfname)}&dstalgo=${encodeURIComponent(dstalgo)}&ks1=${ks1}&ks2=${ks2}`;
     if (getNoAuth()) endpoint += `&no_auth=true`;
+    endpoint = appendLogsParam(endpoint);
 
     try {
         const res = await fetch(endpoint);
@@ -319,6 +334,8 @@ async function runChangeAppKey() {
     }
 
     let endpoint = `/hf/mfdes/changekey?aid=${encodeURIComponent(aid)}&newkey=${encodeURIComponent(newkey)}`;
+    endpoint = appendLogsParam(endpoint);
+
     output.innerHTML = `<pre>Running ${endpoint} ... please wait.</pre>`;
 
     try {
@@ -340,6 +357,8 @@ async function runCreateFile() {
     }
 
     let endpoint = `/hf/mfdes/createfile?aid=${encodeURIComponent(aid)}`;
+    endpoint = appendLogsParam(endpoint);
+
     output.innerHTML = `<pre>Running ${endpoint} ... please wait.</pre>`;
 
     try {
@@ -370,7 +389,8 @@ async function runWriteFile() {
         hexData += plainText.charCodeAt(i).toString(16).padStart(2, '0');
     }
 
-    const endpoint = `/hf/mfdes/write?aid=${encodeURIComponent(aid)}&fid=${fid}&data=${hexData}&offset=${offset}`;
+    let endpoint = `/hf/mfdes/write?aid=${encodeURIComponent(aid)}&fid=${fid}&data=${hexData}&offset=${offset}`;
+    endpoint = appendLogsParam(endpoint);
 
     output.innerHTML = `<pre>Running ${endpoint} ... please wait.</pre>`;
 
@@ -398,6 +418,7 @@ async function runDeleteFile() {
     if (getNoAuth()) {
         endpoint += '&no_auth=1';
     }
+    endpoint = appendLogsParam(endpoint);
 
     output.innerHTML = `<pre>Running ${endpoint} ... please wait.</pre>`;
 
@@ -422,6 +443,7 @@ async function runDeleteApp() {
     if (getNoAuth()) {
         endpoint += '&no_auth=1';
     }
+    endpoint = appendLogsParam(endpoint);
     output.innerHTML = `<pre>Running ${endpoint} ... please wait.</pre>`;
     try {
         const res = await fetch(endpoint);

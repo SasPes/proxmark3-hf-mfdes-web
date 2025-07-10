@@ -250,3 +250,10 @@ table {
     width: 16px;
     height: 16px;
 }
+
+#logsToggleBtn {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    z-index: 10;
+}

@@ -93,7 +93,6 @@ function setupMfdesSubTabs() {
     });
 }
 
-// --- No Auth toggle ---
 document.addEventListener("DOMContentLoaded", function () {
     const btn = document.getElementById('noAuthToggle');
     let noAuthEnabled = false;
@@ -103,9 +102,17 @@ document.addEventListener("DOMContentLoaded", function () {
         btn.textContent = `No Auth: ${noAuthEnabled ? 'ON' : 'OFF'}`;
         btn.classList.toggle('active', noAuthEnabled);
     });
-
-    // Make it globally accessible if needed
     window.getNoAuth = () => noAuthEnabled;
+
+    const logsBtn = document.getElementById('logsToggleBtn');
+    let logsEnabled = false;
+
+    logsBtn.addEventListener('click', function () {
+        logsEnabled = !logsEnabled;
+        logsBtn.textContent = `File Logging: ${logsEnabled ? 'ON' : 'OFF'}`;
+        logsBtn.classList.toggle('active', logsEnabled);
+    });
+    window.getLogsEnabled = () => logsEnabled;
 });
 
 function strToHex() {

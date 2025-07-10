@@ -1,5 +1,12 @@
 const RECOVERY_CODE_CHARS = 'abcdefghijklmnopqrstuvwxyz0123456789';
 
+function appendLogsParam(endpoint) {
+    if (window.getLogsEnabled && window.getLogsEnabled()) {
+        return endpoint + (endpoint.includes('?') ? '&' : '?') + 'logs=1';
+    }
+    return endpoint;
+}
+
 async function runSetDefaultMasterKey() {
     const output = document.getElementById('output');
     output.innerHTML = `<pre>Setting default master key (to DES/0...0)...</pre>`;
@@ -10,7 +17,8 @@ async function runSetDefaultMasterKey() {
     for (let i = 0; i < masterKey.length; i++) {
         hexKey += masterKey.charCodeAt(i).toString(16).padStart(2, '0');
     }
-    const endpoint = `/hf/mfdes/changekey-master-default?oldalgo=${encodeURIComponent(oldalgo)}&oldkey=${encodeURIComponent(hexKey)}`;
+    let endpoint = `/hf/mfdes/changekey-master-default?oldalgo=${encodeURIComponent(oldalgo)}&oldkey=${encodeURIComponent(hexKey)}`;
+    endpoint = appendLogsParam(endpoint);
     output.innerHTML = `<pre>Running ${endpoint} ... please wait.</pre>`;
     try {
         const res = await fetch(endpoint);
@@ -54,7 +62,9 @@ async function runSetMasterKeyRecoveryCodes() {
 
     // Step 1: Start Proxmark3
     let step = stepBox('Step 1: Starting Proxmark3...');
-    let res = await fetch(`/start-pm3`);
+    let endpoint = `/start-pm3`;
+    endpoint = appendLogsParam(endpoint);
+    let res = await fetch(endpoint);
     let text = await res.text();
     logs.push(`${step}<pre>${highlightOutput(text)}</pre>`);
     updateOutput();
@@ -70,7 +80,9 @@ async function runSetMasterKeyRecoveryCodes() {
     for (let i = 0; i < key.length; i++) {
         hexKey += key.charCodeAt(i).toString(16).padStart(2, '0');
     }
-    res = await fetch(`/hf/mfdes/changekey-master?newalgo=aes&newkey=${encodeURIComponent(hexKey)}`);
+    endpoint = `/hf/mfdes/changekey-master?newalgo=aes&newkey=${encodeURIComponent(hexKey)}`;
+    endpoint = appendLogsParam(endpoint);
+    res = await fetch(endpoint);
     text = await res.text();
     logs.push(`${step}<pre>${highlightOutput(text)}</pre>`);
     updateOutput();
@@ -82,7 +94,9 @@ async function runSetMasterKeyRecoveryCodes() {
 
     // Step 3: Set profile
     step = stepBox('Step 3: Setting profile...');
-    res = await fetch(`/hf/mfdes/set-default?type=AES&key=${encodeURIComponent(hexKey)}`);
+    endpoint = `/hf/mfdes/set-default?type=AES&key=${encodeURIComponent(hexKey)}`;
+    endpoint = appendLogsParam(endpoint);
+    res = await fetch(endpoint);
     text = await res.text();
     logs.push(`${step}<pre>${highlightOutput(text)}</pre>`);
     updateOutput();
@@ -132,7 +146,9 @@ async function saveRecoveryCodes() {
 
     // Step 1: Check if app exists, create if not
     let step = stepBox('Step 1: Checking/Creating App...');
-    let getAppsRes = await fetch(`/hf/mfdes/getappnames`);
+    let endpoint = `/hf/mfdes/getappnames`;
+    endpoint = appendLogsParam(endpoint);
+    let getAppsRes = await fetch(endpoint);
     let getAppsText = await getAppsRes.text();
     logs.push(`${step}<pre>${highlightOutput(getAppsText)}</pre>`);
     updateOutput();
@@ -161,7 +177,9 @@ async function saveRecoveryCodes() {
     if (!aid) {
         aid = (maxAid + 1).toString().padStart(6, '0');
         fid = (maxFid + 1).toString().padStart(4, '0');
-        let createRes = await fetch(`/hf/mfdes/createapp?aid=${aid}&fid=${fid}&dfname=${encodeURIComponent(appName)}&dstalgo=AES`);
+        endpoint = `/hf/mfdes/createapp?aid=${aid}&fid=${fid}&dfname=${encodeURIComponent(appName)}&dstalgo=AES`;
+        endpoint = appendLogsParam(endpoint);
+        let createRes = await fetch(endpoint);
         let createText = await createRes.text();
         logs.push(stepBox(`Creating App with AID ${aid} and FID ${fid}...`) + `<pre>${highlightOutput(createText)}</pre>`);
         updateOutput();
@@ -176,7 +194,7 @@ async function saveRecoveryCodes() {
         updateOutput();
     }
 
-// Only set app key and create file if app was just created
+    // Only set app key and create file if app was just created
     if (!appAlreadyExists) {
         // Step 2: Set App Key
         step = stepBox('Step 2: Setting App Key...');
@@ -184,7 +202,9 @@ async function saveRecoveryCodes() {
         for (let i = 0; i < key.length; i++) {
             hexKey += key.charCodeAt(i).toString(16).padStart(2, '0');
         }
-        let res = await fetch(`/hf/mfdes/changekey?aid=${aid}&newkey=${encodeURIComponent(hexKey)}`);
+        endpoint = `/hf/mfdes/changekey?aid=${aid}&newkey=${encodeURIComponent(hexKey)}`;
+        endpoint = appendLogsParam(endpoint);
+        let res = await fetch(endpoint);
         let text = await res.text();
         logs.push(`${step}<pre>${highlightOutput(text)}</pre>`);
         updateOutput();
@@ -196,7 +216,9 @@ async function saveRecoveryCodes() {
 
         // Step 3: Create File
         step = stepBox('Step 3: Creating File...');
-        res = await fetch(`/hf/mfdes/createfile?aid=${aid}`);
+        endpoint = `/hf/mfdes/createfile?aid=${aid}`;
+        endpoint = appendLogsParam(endpoint);
+        res = await fetch(endpoint);
         text = await res.text();
         logs.push(`${step}<pre>${highlightOutput(text)}</pre>`);
         updateOutput();
@@ -213,8 +235,10 @@ async function saveRecoveryCodes() {
     for (let i = 0; i < codes.length; i++) {
         hexCodes += codes.charCodeAt(i).toString(16).padStart(2, '0');
     }
-    res = await fetch(`/hf/mfdes/write?aid=${aid}&fid=01&data=${hexCodes}&offset=000000`);
-    text = await res.text();
+    endpoint = `/hf/mfdes/write?aid=${aid}&fid=01&data=${hexCodes}&offset=000000`;
+    endpoint = appendLogsParam(endpoint);
+    let res = await fetch(endpoint);
+    let text = await res.text();
     logs.push(`${step}<pre>${highlightOutput(text)}</pre>`);
     updateOutput();
     if (isError(text)) {
@@ -225,7 +249,9 @@ async function saveRecoveryCodes() {
 
     // Step 5: Read file
     step = stepBox('Step 5: Reading file...');
-    res = await fetch(`/hf/mfdes/read?aid=${aid}&fid=01`);
+    endpoint = `/hf/mfdes/read?aid=${aid}&fid=01`;
+    endpoint = appendLogsParam(endpoint);
+    res = await fetch(endpoint);
     text = await res.text();
     logs.push(`${step}<pre>${highlightOutput(text)}</pre>`);
     updateOutput();
@@ -267,7 +293,9 @@ async function cleanupCard() {
 
     // Step 1: Check Free Memory
     let step = stepBox('Step 1: Check Free Memory');
-    let res = await fetch('/hf/mfdes/freemem');
+    let endpoint = '/hf/mfdes/freemem';
+    endpoint = appendLogsParam(endpoint);
+    let res = await fetch(endpoint);
     let text = await res.text();
     logs.push(`${step}<pre>${highlightOutput(text)}</pre>`);
     updateOutput();
@@ -279,19 +307,23 @@ async function cleanupCard() {
 
     // Step 2: Format Card
     step = stepBox('Step 2: Format Card');
-    res = await fetch('/hf/mfdes/formatpicc');
+    endpoint = '/hf/mfdes/formatpicc';
+    endpoint = appendLogsParam(endpoint);
+    res = await fetch(endpoint);
     text = await res.text();
     logs.push(`${step}<pre>${highlightOutput(text)}</pre>`);
     updateOutput();
     if (isError(text)) {
-        logs.push(stepBoxError('🚩 Stopped due to error!') + '<br>');
+        logs.push(stepBoxError('🚩 Stopped due to error or card already wiped & restored!') + '<br>');
         updateOutput();
         return;
     }
 
     // Step 3: Check Free Memory
     step = stepBox('Step 3: Check Free Memory');
-    res = await fetch('/hf/mfdes/freemem');
+    endpoint = '/hf/mfdes/freemem';
+    endpoint = appendLogsParam(endpoint);
+    res = await fetch(endpoint);
     text = await res.text();
     logs.push(`${step}<pre>${highlightOutput(text)}</pre>`);
     updateOutput();
@@ -303,7 +335,9 @@ async function cleanupCard() {
 
     // Step 4: Set default (DES/0...0)
     step = stepBox('Step 4: Set default (DES/0...0)');
-    res = await fetch('/hf/mfdes/changekey-master-default?oldalgo=aes&oldkey=54686973206973206120746573742121'); // "This is a test!!" in hex
+    endpoint = '/hf/mfdes/changekey-master-default?oldalgo=aes&oldkey=54686973206973206120746573742121'; // "This is a test!!" in hex
+    endpoint = appendLogsParam(endpoint);
+    res = await fetch(endpoint);
     text = await res.text();
     logs.push(`${step}<pre>${highlightOutput(text)}</pre>`);
     updateOutput();
@@ -315,7 +349,9 @@ async function cleanupCard() {
 
     // Step 5: Set default profile
     step = stepBox('Step 5: Set default profile');
-    res = await fetch('/hf/mfdes/set-default?type=DES&key=0000000000000000');
+    endpoint = '/hf/mfdes/set-default?type=DES&key=0000000000000000';
+    endpoint = appendLogsParam(endpoint);
+    res = await fetch(endpoint);
     text = await res.text();
     logs.push(`${step}<pre>${highlightOutput(text)}</pre>`);
     updateOutput();
@@ -327,7 +363,9 @@ async function cleanupCard() {
 
     // Step 6: Get profile
     step = stepBox('Step 6: Get profile');
-    res = await fetch('/hf/mfdes/get-default');
+    endpoint = '/hf/mfdes/get-default';
+    endpoint = appendLogsParam(endpoint);
+    res = await fetch(endpoint);
     text = await res.text();
     logs.push(`${step}<pre>${highlightOutput(text)}</pre>`);
     updateOutput();
