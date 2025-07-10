@@ -2,7 +2,7 @@
 
 A web-based interface for sending MIFARE DESFire commands to a Proxmark3 device.  
 
-**Primary goal:** Securely store recovery codes on a MIFARE DESFire card.
+**Main Goal:** Securely store recovery codes on a MIFARE DESFire card.
 
 <img src="ss/MIFARE-DESFire-EV3.png" width="250">
 
@@ -26,6 +26,7 @@ A web-based interface for sending MIFARE DESFire commands to a Proxmark3 device.
 - Tabbed and sub-tabbed UI for easy navigation
 - Output highlighting for command results
 - Automatic dropdown population for AIDs and FIDs
+- All commands and their outputs are optionally logged to the `log` directory
 
 ### Store Recovery Codes Workflows
 
@@ -122,7 +123,6 @@ Use the tabs to access different features:
 - The backend uses pexpect to control the Proxmark3 shell
 - Some features require a connected Proxmark3 device
 - All communication is via HTTP GET requests from the frontend to the FastAPI backend
-- All commands and their outputs are logged to a file in the `log` directory
 ## License
 
 MIT License 
