@@ -1,0 +1,9 @@
+proxmark3: >
+  Configure and start your Proxmark3 device here.<br>
+  For more info see <a target=\"_blank\" href=\"https://github.com/RfidResearchGroup/proxmark3\">Proxmark3 GitHub</a>.
+
+mfDesProfile: >
+  For more info see <a target=\"_blank\" href=\"https://github.com/RfidResearchGroup/proxmark3/blob/ed84b1fcf4be2f43ef074748291d83793262835c/doc/desfire.md#how-to-getset-default-communication-channel-settings\">How to get/set default communication channel settings</a>.
+
+mfDesCommands: >
+  For more info see <a target=\"_blank\" href=\"https://github.com/RfidResearchGroup/proxmark3/blob/ed84b1fcf4be2f43ef074748291d83793262835c/doc/desfire.md\">Notes on MIFARE DESFire</a>.

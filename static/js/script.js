@@ -184,16 +184,35 @@ function setupPasswordToggle(toggleBtnId, eyeIconId, inputId) {
     }
 }
 
-function setupGenericTooltips(jsonPath = '/static/tips/tooltip.json') {
+function setupGenericTooltips(yamlPath = '/static/tips/tooltip.yaml') {
     let tooltipDiv = document.createElement('div');
     tooltipDiv.className = 'info-tooltip';
     tooltipDiv.style.display = 'none';
     tooltipDiv.style.position = 'absolute';
     document.body.appendChild(tooltipDiv);
 
-    fetch(jsonPath)
-        .then(res => res.json())
-        .then(tooltipData => {
+    fetch(yamlPath)
+        .then(res => res.text())
+        .then(yamlText => {
+            const tooltipData = {};
+            let currentKey = null;
+            let currentValue = '';
+            yamlText.split('\n').forEach(line => {
+                const keyMatch = line.match(/^([a-zA-Z0-9_]+):\s*(>?)/);
+                if (keyMatch) {
+                    if (currentKey) {
+                        tooltipData[currentKey] = currentValue.trim();
+                    }
+                    currentKey = keyMatch[1];
+                    currentValue = '';
+                } else if (currentKey) {
+                    currentValue += line.replace(/^\s+/, '') + '\n';
+                }
+            });
+            if (currentKey) {
+                tooltipData[currentKey] = currentValue.trim();
+            }
+
             document.querySelectorAll('legend[id]').forEach(legend => {
                 legend.addEventListener('click', function (e) {
                     e.stopPropagation();
