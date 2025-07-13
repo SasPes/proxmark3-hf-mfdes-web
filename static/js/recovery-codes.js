@@ -335,7 +335,14 @@ async function cleanupCard() {
 
     // Step 4: Set default (DES/0...0)
     step = stepBox('Step 4: Set default (DES/0...0)');
-    endpoint = '/hf/mfdes/changekey-master-default?oldalgo=aes&oldkey=54686973206973206120746573742121'; // "This is a test!!" in hex
+
+    const masterKey = document.getElementById('masterKeyGlobal').value;
+    let hexKey = '';
+    for (let i = 0; i < masterKey.length; i++) {
+        hexKey += masterKey.charCodeAt(i).toString(16).padStart(2, '0');
+    }
+    endpoint = `/hf/mfdes/changekey-master-default?oldalgo=aes&oldkey=${encodeURIComponent(hexKey)}`;
+
     endpoint = appendLogsParam(endpoint);
     res = await fetch(endpoint);
     text = await res.text();

@@ -15,7 +15,14 @@
     <button id="noAuthToggle" class="toggle-btn">No Auth: OFF</button>
     <br>
     <div class="input-with-icon" style="margin-top: 10px;">
-        <input type="password" id="masterKeyGlobal" value="This is a test!!" size="9" placeholder="Master Key"/>
+        <input
+                type="password"
+                id="masterKeyGlobal"
+                size="9"
+                maxlength="16"
+                placeholder="Master Key (ex. This is a test!!)"
+                title="Enter exactly 16 characters (AES)"
+        />
         <button type="button" id="toggleMasterKeyVisibility" class="button">
             <img id="masterEyeIcon" src="/static/img/eye.png" alt="Show/Hide" class="icon-16">
         </button>

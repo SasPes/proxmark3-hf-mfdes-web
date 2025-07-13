@@ -203,4 +203,13 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     });
+
+    const masterKeyInput = document.getElementById('masterKeyGlobal');
+    masterKeyInput.addEventListener('input', function () {
+        if (masterKeyInput.value.length > 0 && masterKeyInput.value.length !== 16) {
+            masterKeyInput.classList.add('input-error');
+        } else {
+            masterKeyInput.classList.remove('input-error');
+        }
+    });
 });
