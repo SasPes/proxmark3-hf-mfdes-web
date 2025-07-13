@@ -184,6 +184,37 @@ function setupPasswordToggle(toggleBtnId, eyeIconId, inputId) {
     }
 }
 
+function setupGenericTooltips(jsonPath = '/static/tips/tooltip.json') {
+    let tooltipDiv = document.createElement('div');
+    tooltipDiv.className = 'info-tooltip';
+    tooltipDiv.style.display = 'none';
+    tooltipDiv.style.position = 'absolute';
+    document.body.appendChild(tooltipDiv);
+
+    fetch(jsonPath)
+        .then(res => res.json())
+        .then(tooltipData => {
+            document.querySelectorAll('legend[id]').forEach(legend => {
+                legend.addEventListener('click', function (e) {
+                    e.stopPropagation();
+                    if (tooltipData[legend.id]) {
+                        tooltipDiv.innerHTML = tooltipData[legend.id];
+                        const rect = legend.getBoundingClientRect();
+                        tooltipDiv.style.top = `${rect.bottom + window.scrollY}px`;
+                        tooltipDiv.style.left = `${rect.left + window.scrollX}px`;
+                        tooltipDiv.style.display = 'block';
+                    }
+                });
+            });
+            document.addEventListener('click', function () {
+                tooltipDiv.style.display = 'none';
+            });
+            tooltipDiv.addEventListener('click', function (e) {
+                e.stopPropagation();
+            });
+        });
+}
+
 document.addEventListener('DOMContentLoaded', function () {
     setupPasswordToggle('toggleKeyVisibility', 'eyeIcon', 'key');
     setupPasswordToggle('toggleAppKeyVisibility', 'appEyeIcon', 'newAppKey');
@@ -212,4 +243,6 @@ document.addEventListener('DOMContentLoaded', function () {
             masterKeyInput.classList.remove('input-error');
         }
     });
+
+    setupGenericTooltips();
 });

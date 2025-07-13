@@ -40,7 +40,7 @@
 
 <div id="tab0" class="tab-content">
     <fieldset class="mfdes-fieldset">
-        <legend>Proxmark3</legend>
+        <legend id="proxmark3"> Proxmark3</legend>
         <label for="pm3path">Proxmark3 Executable Path</label>
         <input type="text" id="pm3path" value="../proxmark3/pm3" size="40"/>
         <button id="startPm3Btn" onclick="startPm3()">Start Proxmark3</button>
@@ -49,7 +49,7 @@
 
 <div id="tab1" class="tab-content">
     <fieldset class="mfdes-fieldset">
-        <legend>MFDes Profile</legend>
+        <legend id="mfDesProfile"> MFDes Profile</legend>
         <div class="mfdes-group" style="margin-bottom: 1rem;">
             <button onclick="runCmd('hf/mfdes/get-default')">Get profile</button>
             <button onclick="runSetDefaultProfile()">Set default profile</button>
@@ -81,7 +81,7 @@
 
 <div id="tab2" class="tab-content">
     <fieldset class="mfdes-fieldset">
-        <legend>MFDes Commands</legend>
+        <legend id="mfDesCommands">MFDes Commands</legend>
         <div class="mfdes-group">
             <button onclick="runCmd('hf/search')">HF Search</button>
             <button onclick="runFreemem()">Check Free Memory</button>
