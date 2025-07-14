@@ -1,6 +1,6 @@
 # Proxmark3 MIFARE DESFire Web Interface
 
-<img src="static/img/rfid.png" alt="RFID Icon" style="height:32px; vertical-align:middle; margin-right:10px;">A web-based interface for sending MIFARE DESFire commands to a Proxmark3 device.  
+<img src="static/img/rfid.png" alt="RFID Icon" style="height:32px;"> A web-based interface for sending MIFARE DESFire commands to a Proxmark3 device.  
 
 **Main Goal:** Securely store recovery codes on a MIFARE DESFire card.
 
