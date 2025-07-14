@@ -286,3 +286,9 @@ legend {
     font-weight: normal;
     color: #000;
 }
+
+.rfid-icon {
+    height: 36px;
+    margin-right: 10px;
+    margin-top: -15px;
+}
