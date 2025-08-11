@@ -1,0 +1,52 @@
+/* Hacking Theme */
+body.theme-hacking {
+    background: #111 !important;
+    color: #00ff00 !important;
+    font-family: 'Courier New', Courier, monospace !important;
+}
+
+/* Containers and Fieldsets */
+body.theme-hacking .mfdes-fieldset,
+body.theme-hacking .step-box,
+body.theme-hacking .step-error,
+body.theme-hacking .output {
+    background: #222 !important;
+    color: #00ff00 !important;
+    border-color: #00ff00 !important;
+    box-shadow: none !important;
+}
+
+/* Buttons */
+body.theme-hacking button,
+body.theme-hacking .toggle-btn,
+body.theme-hacking .recovery-full-btn,
+body.theme-hacking button.recovery-full-btn.cleanup,
+body.theme-hacking button.toggle-btn,
+body.theme-hacking button.toggle-btn.active {
+    background: #222 !important;
+    color: #00ff00 !important;
+    border: 1px solid #00ff00 !important;
+}
+
+/* Form Elements */
+body.theme-hacking input,
+body.theme-hacking select,
+body.theme-hacking textarea {
+    background: #222 !important;
+    color: #00ff00 !important;
+    border: 1px solid #00ff00 !important;
+}
+
+/* Tabs and Sub-tabs Horizontal Line */
+body.theme-hacking .tabs,
+body.theme-hacking .sub-tabs {
+    border-bottom: 2px solid #00ff00 !important;
+}
+
+/* Active Tab and Sub-tab */
+body.theme-hacking .tab-button.active,
+body.theme-hacking .sub-tab-button.active {
+    border-bottom: 3px solid #00ff00 !important;
+    color: #00ff00 !important;
+    background: #222 !important;
+}

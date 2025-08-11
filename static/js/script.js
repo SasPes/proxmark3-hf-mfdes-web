@@ -1,3 +1,10 @@
+document.addEventListener('DOMContentLoaded', function () {
+    const rfidIcon = document.getElementById('rfidIcon');
+    rfidIcon.addEventListener('dblclick', function () {
+        document.body.classList.toggle('theme-hacking');
+    });
+});
+
 // --- Tab switching logic ---
 document.addEventListener("DOMContentLoaded", function () {
     document.querySelectorAll('.tab-button').forEach(button => {
