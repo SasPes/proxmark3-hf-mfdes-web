@@ -5,6 +5,10 @@ body.theme-hacking {
     font-family: 'Courier New', Courier, monospace !important;
 }
 
+body.theme-hacking h1 {
+    font-family: monospace !important;
+}
+
 /* Containers and Fieldsets */
 body.theme-hacking .mfdes-fieldset,
 body.theme-hacking .step-box,
