@@ -453,3 +453,66 @@ async function runDeleteApp() {
         output.innerHTML = `<pre>Error: ${escapeHTML(err.message)}</pre>`;
     }
 }
+
+function extractAsciiText() {
+    const outputDiv = document.getElementById('output');
+    if (!outputDiv) return;
+
+    // Get text content (strip HTML tags)
+    const text = outputDiv.textContent || outputDiv.innerText || '';
+    const lines = text.split('\n');
+    const asciiLines = [];
+
+    // Regex to match lines with ASCII column
+    const asciiRegex = /^\[=\].*\|\s*([ -~]{1,16})\s*$/;
+
+    for (const line of lines) {
+        const match = asciiRegex.exec(line);
+        if (match) {
+            asciiLines.push(match[1]);
+        }
+    }
+
+    // Remove header "Ascii" if present
+    let filtered = asciiLines.filter((line, idx) => !(idx === 0 && line.trim().toLowerCase() === 'ascii'));
+
+    // Join all lines into a single string
+    let filteredText = filtered.join('');
+
+    // Remove trailing dots
+    filteredText = filteredText.replace(/\.*\s*$/g, '');
+
+    // Remove new lines
+    filteredText = filteredText.replace(/\n/g, ' ');
+
+    // Split by dots, trim, filter empty, join with newlines
+    const cleanedText = filteredText.split('.').map(s => s.trim()).filter(Boolean).join('\n');
+
+    // Copy to clipboard
+    if (navigator.clipboard) {
+        navigator.clipboard.writeText(cleanedText).then(() => {
+            showCopyConfirmation(outputDiv);
+        });
+    } else {
+        const temp = document.createElement('textarea');
+        temp.value = cleanedText;
+        document.body.appendChild(temp);
+        temp.select();
+        document.execCommand('copy');
+        document.body.removeChild(temp);
+        showCopyConfirmation(outputDiv);
+    }
+}
+
+function showCopyConfirmation() {
+    const extractBtn = document.getElementById('extractAsciiBtn');
+    if (!extractBtn) return;
+    const originalText = extractBtn.textContent;
+    const originalColor = extractBtn.style.color;
+    extractBtn.textContent = 'Copied to clipboard!';
+    extractBtn.style.color = 'orange';
+    setTimeout(() => {
+        extractBtn.textContent = originalText;
+        extractBtn.style.color = originalColor;
+    }, 1500);
+}
