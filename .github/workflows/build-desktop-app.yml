@@ -25,6 +25,9 @@ jobs:
               gtk3 gtk3-devel gobject-introspection gobject-introspection-devel cairo-devel libX11 \
               xorg-x11-server-Xvfb
 
+            # Additional dependencies for PyGObject build
+            dnf install -y gobject-introspection-devel cairo-gobject-devel
+
             echo 'Installing Python packages...'
             pip3 install pyinstaller fastapi uvicorn pywebview requests pexpect PyGObject
 
