@@ -15,18 +15,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Set up Docker
+        uses: docker/setup-buildx-action@v3
+
       - name: Build in Fedora Container
         run: |
           docker run --rm -v ${{ github.workspace }}:/app -w /app fedora:39 bash -c "
-            dnf install -y python3-pip python3-devel gcc make git \
-              gtk3 gtk3-devel gobject-introspection-devel cairo-devel libX11 \
-              xorg-x11-server-Xvfb &&
-            pip3 install pyinstaller fastapi uvicorn pywebview requests pexpect PyGObject &&
-            export PYWEBVIEW_GUI=gtk &&
-            export GDK_BACKEND=x11 &&
-            export DISPLAY=:99 &&
-            Xvfb :99 &  # Start virtual display
-            python3 -m PyInstaller --onefile --add-data 'static:static' desktop.py --name proxmark3-hf-mfdes
+            dnf install -y python3-pip python3-devel gcc make git gtk3 gtk3-devel &&
+            pip3 install pyinstaller fastapi uvicorn pywebview requests pexpect &&
+            pyinstaller --onefile --add-data 'static:static' desktop.py --name proxmark3-hf-mfdes
           "
 
       - name: Upload built binary
