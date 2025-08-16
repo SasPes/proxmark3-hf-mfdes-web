@@ -8,7 +8,8 @@
 
 > On **MIFARE DESFire EV3 4K** card with **5120 bytes** free memory (even though 4K = 4096 bytes), you can store up to **7 apps** (about 680 bytes per app), each with **16 recovery codes** (e.g., GitHub)
 
-![Screenshot](ss/ss-h.png)
+[https://saspes.pythonanywhere.com/](https://saspes.pythonanywhere.com/)
+[![Screenshot](ss/ss-h.png)](https://saspes.pythonanywhere.com/)
 
 ### Useful Links
 
@@ -58,6 +59,24 @@
 ## Quick Start
 
 ### Requirements
+- Python 3.8+
+- [Proxmark3](https://github.com/Proxmark/proxmark3) (built and accessible)
+
+### Installation
+```bash
+pip install flask pexpect
+```
+
+### Running the Server
+```bash
+python main.py
+```
+
+```html
+http://localhost:5000/
+```
+
+### Requirements (old)
 
 - Python 3.8+
 - [Proxmark3](https://github.com/Proxmark/proxmark3) (built and accessible)
@@ -65,7 +84,7 @@
 - [pexpect](https://pexpect.readthedocs.io/en/stable/)
 - [Uvicorn](https://www.uvicorn.org/)
 
-### Installation
+### Installation (old)
 
 1. **Clone the repository:**
     ```bash
@@ -80,7 +99,7 @@
 
 3. **Ensure your Proxmark3 binary is available (default: `../proxmark3/pm3`).**
 
-### Running the Server
+### Running the Server (old)
 
 ```bash
 uvicorn main:app --reload

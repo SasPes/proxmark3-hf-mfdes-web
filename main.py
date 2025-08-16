@@ -1,7 +1,13 @@
-from fastapi import FastAPI
-from fastapi.staticfiles import StaticFiles
-from api.routes import router
+from flask import Flask, send_from_directory
+from api.routes import bp
 
-app = FastAPI()
-app.mount("/static", StaticFiles(directory="static"), name="static")
-app.include_router(router)
+app = Flask(__name__, static_folder='static')
+
+@app.route('/static/<path:filename>')
+def static_files(filename):
+    return send_from_directory(app.static_folder, filename)
+
+app.register_blueprint(bp)
+
+if __name__ == '__main__':
+    app.run()
