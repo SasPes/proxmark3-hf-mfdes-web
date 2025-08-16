@@ -88,6 +88,24 @@ uvicorn main:app --reload
 
 Open your browser and go to [http://localhost:8000](http://localhost:8000).
 
+## Desktop App
+
+### Linux
+
+#### Fedora
+
+To run the desktop version (with a built-in browser window):
+
+1. **Install pywebview:**
+    ```bash
+    pip install pywebview
+    ```
+
+2. **Package the app with PyInstaller:**
+    ```bash
+    pyinstaller --onefile --add-data "static:static" desktop.py --name proxmark3-hf-mfdes
+    ```
+
 ---
 
 ## Usage Overview
