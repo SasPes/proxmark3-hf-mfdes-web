@@ -21,13 +21,12 @@ jobs:
             dnf install -y python3-pip python3-devel gcc make git \
               gtk3 gtk3-devel gobject-introspection-devel cairo-devel libX11 \
               xorg-x11-server-Xvfb &&
-            pip3 install --user pyinstaller fastapi uvicorn pywebview requests pexpect PyGObject &&
-            export PATH=\$PATH:\$HOME/.local/bin &&
+            pip3 install pyinstaller fastapi uvicorn pywebview requests pexpect PyGObject &&
             export PYWEBVIEW_GUI=gtk &&
             export GDK_BACKEND=x11 &&
             export DISPLAY=:99 &&
             Xvfb :99 &  # Start virtual display
-            ~/.local/bin/pyinstaller --onefile --add-data 'static:static' desktop.py --name proxmark3-hf-mfdes
+            pyinstaller --onefile --add-data 'static:static' desktop.py --name proxmark3-hf-mfdes
           "
 
       - name: Upload built binary
