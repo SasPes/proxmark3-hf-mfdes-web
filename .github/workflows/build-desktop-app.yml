@@ -1,4 +1,4 @@
-name: Build Desktop App
+name: Build on Fedora (via Docker)
 
 on:
   push:
@@ -7,40 +7,27 @@ on:
     branches: [main]
 
 jobs:
-  build:
+  build-fedora:
     runs-on: ubuntu-latest
+    name: Fedora PyInstaller Build
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.10'
+      - name: Set up Docker
+        uses: docker/setup-buildx-action@v3
 
-      - name: Install dependencies
+      - name: Build in Fedora Container
         run: |
-          pip install fastapi pexpect uvicorn pywebview pyinstaller
+          docker run --rm -v ${{ github.workspace }}:/app -w /app fedora:39 bash -c "
+            dnf install -y python3-pip python3-devel gcc make git &&
+            pip3 install pyinstaller fastapi uvicorn pywebview requests &&
+            pyinstaller --onefile --add-data 'static:static' desktop.py --name proxmark3-hf-mfdes
+          "
 
-      - name: Install GTK dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y python3-gi gir1.2-gtk-3.0 libgirepository1.0-dev libcairo2-dev
-
-      - name: Install GTK backend for pywebview
-        run: |
-          pip install PyGObject
-
-      - name: Install Qt backend for pywebview
-        run: |
-          pip install PyQt5
-
-      - name: Build with PyInstaller
-        run: |
-          pyinstaller --onefile --add-data "static:static" desktop.py --name proxmark3-hf-mfdes
-
-      - name: Upload artifact
+      - name: Upload built binary
         uses: actions/upload-artifact@v4
         with:
-          name: proxmark3-hf-mfdes
+          name: proxmark3-hf-mfdes-fedora
           path: dist/proxmark3-hf-mfdes
