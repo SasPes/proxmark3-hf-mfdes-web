@@ -22,7 +22,7 @@ jobs:
 
             echo 'Installing system dependencies...'
             dnf install -y python3-pip python3-devel gcc make git \
-              gtk3 gtk3-devel gobject-introspection-devel cairo-devel libX11 \
+              gtk3 gtk3-devel gobject-introspection gobject-introspection-devel cairo-devel libX11 \
               xorg-x11-server-Xvfb
 
             echo 'Installing Python packages...'
