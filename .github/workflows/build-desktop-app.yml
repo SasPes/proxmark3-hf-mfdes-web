@@ -17,24 +17,24 @@ jobs:
 
       - name: Build in Fedora Container
         run: |
-          docker run --rm -v ${{ github.workspace }}:/app -w /app fedora:39 bash -c "
-            set -e
+          docker run --rm -v "${{ github.workspace }}":/app -w /app fedora:41 bash -c "
+            set -euxo pipefail
 
             echo 'Installing system dependencies...'
-            dnf install -y python3-pip python3-devel gcc make git \
-              gtk3 gtk3-devel gobject-introspection gobject-introspection-devel cairo-devel libX11 \
-              xorg-x11-server-Xvfb
-
-            # Additional dependencies for PyGObject build
-            dnf install -y gobject-introspection-devel cairo-gobject-devel
+            dnf install -y \
+              python3-pip python3-devel gcc make git \
+              gtk3 gtk3-devel gobject-introspection gobject-introspection-devel \
+              cairo-devel cairo-gobject-devel libX11 \
+              xorg-x11-server-Xvfb atk atk-devel pango pango-devel libepoxy libepoxy-devel
 
             echo 'Installing Python packages...'
-            pip3 install pyinstaller fastapi uvicorn pywebview requests pexpect PyGObject
+            pip3 install --no-cache-dir pyinstaller fastapi uvicorn pywebview requests pexpect PyGObject
 
             echo 'Starting Xvfb and setting environment variables...'
-            Xvfb :99 & export DISPLAY=:99
+            export DISPLAY=:99
             export PYWEBVIEW_GUI=gtk
             export GDK_BACKEND=x11
+            Xvfb :99 &
 
             echo 'Running PyInstaller to build executable...'
             python3 -m PyInstaller --onefile --add-data 'static:static' desktop.py --name proxmark3-hf-mfdes
