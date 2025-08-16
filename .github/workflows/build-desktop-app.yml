@@ -27,7 +27,7 @@ jobs:
             export GDK_BACKEND=x11 &&
             export DISPLAY=:99 &&
             Xvfb :99 &  # Start virtual display
-            pyinstaller --onefile --add-data 'static:static' desktop.py --name proxmark3-hf-mfdes
+            ~/.local/bin/pyinstaller --onefile --add-data 'static:static' desktop.py --name proxmark3-hf-mfdes
           "
 
       - name: Upload built binary
