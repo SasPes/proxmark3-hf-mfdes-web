@@ -1,4 +1,4 @@
-name: Build on Fedora (via Docker)
+name: Build on Fedora
 
 on:
   push:
@@ -9,7 +9,7 @@ on:
 jobs:
   build-fedora:
     runs-on: ubuntu-latest
-    name: Fedora PyInstaller Build
+    name: Fedora PyInstaller Build with Qt
 
     steps:
       - name: Checkout code
@@ -21,8 +21,12 @@ jobs:
       - name: Build in Fedora Container
         run: |
           docker run --rm -v ${{ github.workspace }}:/app -w /app fedora:39 bash -c "
-            dnf install -y python3-pip python3-devel gcc make git &&
-            pip3 install pyinstaller fastapi uvicorn pywebview requests pexpect &&
+            dnf install -y python3-pip python3-devel gcc make git \
+              qt5-qtbase qt5-qtbase-devel qt5-qtwebkit qt5-qtsvg \
+              libX11 libXext libXrender libXtst libXi libXfixes libXrandr xorg-x11-server-Xvfb &&
+            pip3 install pyinstaller fastapi uvicorn pywebview requests pexpect PyQt5 &&
+            export QT_QPA_PLATFORM=offscreen &&
+            export PYWEBVIEW_GUI=qt &&
             pyinstaller --onefile --add-data 'static:static' desktop.py --name proxmark3-hf-mfdes
           "
 
