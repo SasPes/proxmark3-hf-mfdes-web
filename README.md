@@ -56,6 +56,42 @@
 
 ---
 
+## Usage Overview
+
+Use the tabs to access different features:
+
+- **Proxmark3**  
+  - Set the Proxmark3 executable path and start the shell
+
+- **MFDes Profile**  
+  - Get or set the default MFDes profile (key and type)
+
+- **MFDes Commands**  
+  - Run common MFDes commands (e.g., HF Search, Free Memory, Info, List Apps)
+
+- **MFDes (Card/App/File/Delete)**  
+  - Set or reset card master key
+  - Create or delete MFDes applications and files
+  - Set app keys
+  - Write/read file data
+  - Format card
+
+- **Tools**  
+  - Convert between string and hex representations
+
+**Other features:**
+- "No Auth" toggle disables authentication for supported commands
+- Dropdowns for AID and FID auto-populate after loading apps
+- Output and command results are color-highlighted
+
+## Notes
+
+- The backend uses pexpect to control the Proxmark3 shell
+- Some features require a connected Proxmark3 device
+- All communication is via HTTP GET requests from the frontend to the FastAPI backend
+
+---
+
 ## Quick Start
 
 ### Requirements
@@ -107,41 +143,20 @@ uvicorn main:app --reload
 
 Open your browser and go to [http://localhost:8000](http://localhost:8000).
 
----
+### Packaged desktop app
 
-## Usage Overview
+#### Linux / Fedora
 
-Use the tabs to access different features:
+```sh
+sudo dnf install python3-gobject webkit2gtk3
 
-- **Proxmark3**  
-  - Set the Proxmark3 executable path and start the shell
+pip install PyGObject
 
-- **MFDes Profile**  
-  - Get or set the default MFDes profile (key and type)
+pip install pyinstaller
 
-- **MFDes Commands**  
-  - Run common MFDes commands (e.g., HF Search, Free Memory, Info, List Apps)
+pyinstaller --onefile --name proxmark3-hf-mfdes --add-data "static:static" --hidden-import=gi --hidden-import=pywebview.platforms.gtk desktop.py
+```
 
-- **MFDes (Card/App/File/Delete)**  
-  - Set or reset card master key
-  - Create or delete MFDes applications and files
-  - Set app keys
-  - Write/read file data
-  - Format card
-
-- **Tools**  
-  - Convert between string and hex representations
-
-**Other features:**
-- "No Auth" toggle disables authentication for supported commands
-- Dropdowns for AID and FID auto-populate after loading apps
-- Output and command results are color-highlighted
-
-## Notes
-
-- The backend uses pexpect to control the Proxmark3 shell
-- Some features require a connected Proxmark3 device
-- All communication is via HTTP GET requests from the frontend to the FastAPI backend
 ## License
 
 MIT License 
