@@ -144,6 +144,7 @@ Use the tabs to access different features:
 
 ## TODO
 - [ ] Add clear log button bottom right
+- [ ] Fix the hacking theme (dropdowns, buttons, etc.)
 
 ## License
 
