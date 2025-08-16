@@ -22,7 +22,7 @@ jobs:
         run: |
           docker run --rm -v ${{ github.workspace }}:/app -w /app fedora:39 bash -c "
             dnf install -y python3-pip python3-devel gcc make git &&
-            pip3 install pyinstaller fastapi uvicorn pywebview requests &&
+            pip3 install pyinstaller fastapi uvicorn pywebview requests pexpect &&
             pyinstaller --onefile --add-data 'static:static' desktop.py --name proxmark3-hf-mfdes
           "
 
