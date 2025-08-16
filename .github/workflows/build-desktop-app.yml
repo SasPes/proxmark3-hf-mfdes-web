@@ -26,10 +26,10 @@ jobs:
               gtk3 gtk3-devel gobject-introspection gobject-introspection-devel \
               cairo-devel cairo-gobject-devel libX11 \
               xorg-x11-server-Xvfb atk atk-devel pango pango-devel libepoxy libepoxy-devel \
-              webkit2gtk3 webkit2gtk3-devel
+              webkit2gtk3 webkit2gtk3-devel python3-gobject python3-webkit2gtk
 
             echo 'Installing Python packages...'
-            pip3 install --no-cache-dir pyinstaller fastapi uvicorn pywebview requests pexpect PyGObject
+            pip3 install --no-cache-dir pyinstaller fastapi uvicorn requests pexpect
 
             echo 'Starting Xvfb and setting environment variables...'
             export DISPLAY=:99
