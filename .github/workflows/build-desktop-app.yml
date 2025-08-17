@@ -9,15 +9,15 @@ on:
 jobs:
   build-fedora:
     runs-on: ubuntu-latest
-    name: Fedora PyInstaller Build (GTK)
+    name: Fedora 42 PyInstaller Build (GTK + WebKitGTK)
 
     steps:
-      - name: Checkout code
+      - name: Checkout source code
         uses: actions/checkout@v3
 
-      - name: Build in Fedora Container
+      - name: Build in Fedora 42 Container
         run: |
-          docker run --rm -v "${{ github.workspace }}":/app -w /app fedora:41 bash -c "
+          docker run --rm -v "${{ github.workspace }}":/app -w /app fedora:42 bash -c "
             set -euxo pipefail
 
             echo 'Installing system dependencies...'
@@ -29,17 +29,22 @@ jobs:
               webkit2gtk3 webkit2gtk3-devel mesa-libEGL \
               xorg-x11-server-Xvfb
 
-            echo 'Installing Python packages...'
-            pip3 install --no-cache-dir pyinstaller fastapi uvicorn requests pexpect pywebview
+            echo 'Installing Python dependencies...'
+            pip3 install --no-cache-dir \
+              pyinstaller fastapi uvicorn pywebview requests pexpect
 
-            echo 'Setting up environment for headless GTK...'
+            echo 'Setting up headless GTK environment...'
             export DISPLAY=:99
             export PYWEBVIEW_GUI=gtk
             export GDK_BACKEND=x11
             Xvfb :99 &
 
-            echo 'Building standalone executable...'
-            python3 -m PyInstaller --onefile --add-data 'static:static' desktop.py --name proxmark3-hf-mfdes
+            echo 'Packaging app with PyInstaller...'
+            pyinstaller \
+              --onefile \
+              --add-data 'static:static' \
+              desktop.py \
+              --name proxmark3-hf-mfdes
           "
 
       - name: Upload built binary
