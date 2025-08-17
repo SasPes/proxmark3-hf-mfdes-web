@@ -69,3 +69,19 @@ body.theme-hacking .sub-tab-button.active {
     color: #00ff00 !important;
     background: #222 !important;
 }
+
+.theme-hacking #clearOutputBtn:hover,
+.theme-hacking #clearOutputBtn:focus,
+.theme-hacking #logsToggleBtn:hover,
+.theme-hacking #logsToggleBtn:focus,
+.theme-hacking #noAuthToggle:hover,
+.theme-hacking #noAuthToggle:focus{
+    background: #111 !important;
+    color: #00ff00 !important;
+    border-color: #00ff00 !important;
+}
+
+.theme-hacking #clearOutputBtn img {
+    /* Make the icon green for hacker theme */
+    filter: brightness(0) saturate(100%) invert(62%) sepia(99%) saturate(7499%) hue-rotate(77deg) brightness(102%) contrast(102%);
+}

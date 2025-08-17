@@ -3,6 +3,26 @@ document.addEventListener('DOMContentLoaded', function () {
     rfidIcon.addEventListener('dblclick', function () {
         document.body.classList.toggle('theme-hacking');
     });
+
+    fetch('/static/partials/alg-options.html')
+        .then(response => response.text())
+        .then(optionsHtml => {
+            document.querySelectorAll('.alg-select').forEach(select => {
+                select.innerHTML = optionsHtml;
+                // Set selected option based on data-selected (case-insensitive)
+                const selected = (select.dataset.selected || '').toLowerCase();
+                Array.from(select.options).forEach(opt => {
+                    opt.selected = opt.value.toLowerCase() === selected;
+                });
+            });
+        });
+
+    const clearBtn = document.getElementById('clearOutputBtn');
+    if (clearBtn) {
+        clearBtn.addEventListener('click', function () {
+            document.getElementById('output').innerHTML = '';
+        });
+    }
 });
 
 // --- Tab switching logic ---
@@ -271,19 +291,4 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     setupGenericTooltips();
-});
-
-document.addEventListener('DOMContentLoaded', function() {
-    fetch('/static/partials/alg-options.html')
-        .then(response => response.text())
-        .then(optionsHtml => {
-            document.querySelectorAll('.alg-select').forEach(select => {
-                select.innerHTML = optionsHtml;
-                // Set selected option based on data-selected (case-insensitive)
-                const selected = (select.dataset.selected || '').toLowerCase();
-                Array.from(select.options).forEach(opt => {
-                    opt.selected = opt.value.toLowerCase() === selected;
-                });
-            });
-        });
 });

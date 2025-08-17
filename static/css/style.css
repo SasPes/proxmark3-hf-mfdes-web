@@ -292,3 +292,10 @@ legend {
     margin-right: 10px;
     margin-top: -15px;
 }
+
+#clearOutputBtn {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    z-index: 10;
+}

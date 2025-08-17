@@ -142,9 +142,6 @@ Use the tabs to access different features:
 - Some features require a connected Proxmark3 device
 - All communication is via HTTP GET requests from the frontend to the FastAPI backend
 
-## TODO
-- [ ] Add clear log button bottom right
-
 ## License
 
 MIT License 
