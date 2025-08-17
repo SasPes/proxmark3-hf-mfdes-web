@@ -1,7 +1,7 @@
 import threading
 import webview
 import uvicorn
-from main import app  # Your FastAPI app
+from main import app
 
 
 def run_fastapi():

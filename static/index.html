@@ -61,12 +61,7 @@
         <div class="mfdes-group">
             <form id="mfdesForm" onsubmit="runDefault(event)">
                 <label for="type">Crypto Type</label>
-                <select id="type" name="type">
-                    <option value="DES">DES</option>
-                    <option value="2TDEA">2TDEA</option>
-                    <option value="3TDEA">3TDEA</option>
-                    <option value="AES" selected>AES</option>
-                </select>
+                <select id="type" name="type" class="alg-select" data-selected="AES"></select>
                 <label for="key">Key</label>
                 <div class="input-with-icon">
                     <input type="password" id="key" name="key" size="30"/>

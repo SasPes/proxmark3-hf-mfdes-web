@@ -28,12 +28,7 @@
         <legend>Set new card master key</legend>
         <div class="mfdes-group">
             <label for="masterKeyNewAlgo">New Algo</label>
-            <select id="masterKeyNewAlgo">
-                <option value="des">DES</option>
-                <option value="2tdea">2TDEA</option>
-                <option value="3tdea">3TDEA</option>
-                <option value="aes" selected>AES</option>
-            </select>
+            <select id="masterKeyNewAlgo" class="alg-select" data-selected="AES"></select>
             <label for="masterKeyInput">Key</label>
             <div class="input-with-icon">
                 <input type="password" id="masterKeyInput" size="32"/>
@@ -52,12 +47,7 @@
         <legend>Set card default master key</legend>
         <div class="mfdes-group">
             <label for="masterKeyCurrentAlgo">Current Algo</label>
-            <select id="masterKeyCurrentAlgo">
-                <option value="des">DES</option>
-                <option value="2tdea">2TDEA</option>
-                <option value="3tdea">3TDEA</option>
-                <option value="aes" selected>AES</option>
-            </select>
+            <select id="masterKeyCurrentAlgo" class="alg-select" data-selected="AES"></select>
 
             <label for="masterKeyDefaultOldKey">Current Key</label>
             <div class="input-with-icon">
@@ -86,12 +76,7 @@
             <label for="create-dfname">App Name</label>
             <input type="text" id="create-dfname" placeholder="github" size="10"/>
             <label for="create-dstalgo">Key Algo</label>
-            <select id="create-dstalgo">
-                <option value="des">DES</option>
-                <option value="2tdea">2TDEA</option>
-                <option value="3tdea">3TDEA</option>
-                <option value="aes" selected>AES</option>
-            </select>
+            <select id="create-dstalgo" class="alg-select" data-selected="AES"></select>
             <button onclick="runCreateApp()">Create App</button>
         </div>
     </fieldset>

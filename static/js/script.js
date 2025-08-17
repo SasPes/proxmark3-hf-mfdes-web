@@ -272,3 +272,18 @@ document.addEventListener('DOMContentLoaded', function () {
 
     setupGenericTooltips();
 });
+
+document.addEventListener('DOMContentLoaded', function() {
+    fetch('/static/partials/alg-options.html')
+        .then(response => response.text())
+        .then(optionsHtml => {
+            document.querySelectorAll('.alg-select').forEach(select => {
+                select.innerHTML = optionsHtml;
+                // Set selected option based on data-selected (case-insensitive)
+                const selected = (select.dataset.selected || '').toLowerCase();
+                Array.from(select.options).forEach(opt => {
+                    opt.selected = opt.value.toLowerCase() === selected;
+                });
+            });
+        });
+});
