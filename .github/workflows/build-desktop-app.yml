@@ -23,21 +23,22 @@ jobs:
             echo 'Installing system dependencies...'
             dnf install -y \
               python3-pip python3-devel gcc make git \
-              gtk3 gtk3-devel gobject-introspection gobject-introspection-devel \
-              cairo-devel cairo-gobject-devel libX11 \
-              xorg-x11-server-Xvfb atk atk-devel pango pango-devel libepoxy libepoxy-devel \
-              webkit2gtk3 webkit2gtk3-devel python3-gobject python3-webkit2gtk
+              gtk3 gtk3-devel atk atk-devel pango pango-devel \
+              gobject-introspection gobject-introspection-devel python3-gobject \
+              cairo-devel cairo-gobject-devel libX11 libepoxy libepoxy-devel \
+              webkit2gtk3 webkit2gtk3-devel \
+              xorg-x11-server-Xvfb
 
             echo 'Installing Python packages...'
-            pip3 install --no-cache-dir pyinstaller fastapi uvicorn requests pexpect
+            pip3 install --no-cache-dir pyinstaller fastapi uvicorn requests pexpect pywebview
 
-            echo 'Starting Xvfb and setting environment variables...'
+            echo 'Setting up environment for headless GTK...'
             export DISPLAY=:99
             export PYWEBVIEW_GUI=gtk
             export GDK_BACKEND=x11
             Xvfb :99 &
 
-            echo 'Running PyInstaller to build executable...'
+            echo 'Building standalone executable...'
             python3 -m PyInstaller --onefile --add-data 'static:static' desktop.py --name proxmark3-hf-mfdes
           "
 
